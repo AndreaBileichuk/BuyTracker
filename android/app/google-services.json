@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "201962493357",
+    "project_id": "buy-tracker-544e0",
+    "storage_bucket": "buy-tracker-544e0.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:201962493357:android:bf45a9bec06685f4d27d24",
+        "android_client_info": {
+          "package_name": "com.andrea.buy_tracker"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDL_esSOLo9Eh5F2ngaxMt4IBhpEzHYUVw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

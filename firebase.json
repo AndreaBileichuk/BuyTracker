@@ -1,0 +1,22 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "buy-tracker-544e0",
+          "appId": "1:201962493357:android:bf45a9bec06685f4d27d24",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "buy-tracker-544e0",
+          "configurations": {
+            "android": "1:201962493357:android:bf45a9bec06685f4d27d24",
+            "ios": "1:201962493357:ios:6632f814374f2a75d27d24"
+          }
+        }
+      }
+    }
+  }
+}
