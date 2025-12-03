@@ -41,11 +41,8 @@ class MainShell extends StatelessWidget {
     if (location.startsWith('/lists')) {
       return 1;
     }
-    if (location.startsWith('/share')) {
-      return 2;
-    }
     if (location.startsWith('/stats')) {
-      return 3;
+      return 2;
     }
     return 0;
   }
@@ -60,9 +57,6 @@ class MainShell extends StatelessWidget {
         context.go('/lists');
         break;
       case 2:
-        context.go('/share');
-        break;
-      case 3:
         context.go('/stats');
         break;
     }
