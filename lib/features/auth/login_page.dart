@@ -1,4 +1,4 @@
-import 'package:buy_tracker/features/auth/common/custom_text_field.dart';
+import 'widgets/custom_text_field.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

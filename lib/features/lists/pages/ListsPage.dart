@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../../../core/providers/ShoppingListsProvider.dart';
+import '../../../core/providers/AuthProvider.dart';
 import '../widgets/shopping_list_item_card.dart';
 
 class ListsPage extends StatefulWidget {
@@ -14,7 +15,15 @@ class ListsPage extends StatefulWidget {
 class _ListsPageState extends State<ListsPage> {
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AppAuthProvider>(context);
+
+    if (authProvider.currentUser == null) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
     return Consumer<ShoppingListsProvider>(
+      key: ValueKey(authProvider.currentUser?.uid),
+
       builder: (context, provider, child) {
         return Stack(
           children: [
@@ -100,13 +109,11 @@ class _ListsPageState extends State<ListsPage> {
                         "Списки",
                         style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                       ),
-                      // Кнопку сортування поки прибрали, бо Firestore сортує за датою
-                      // Можна додати пізніше як локальне сортування
                     ],
                   ),
                 ),
 
-                // --- ЛОГІКА ВІДОБРАЖЕННЯ (Loading / Error / List) ---
+                // --- ЛОГІКА ВІДОБРАЖЕННЯ ---
                 if (provider.isLoading)
                   const Expanded(
                     child: Center(child: CircularProgressIndicator()),
@@ -127,11 +134,19 @@ class _ListsPageState extends State<ListsPage> {
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 32.0),
                             child: Text(
-                              provider.error!,
+                              provider.error!, // Тут виводиться текст помилки
                               style: TextStyle(color: Colors.grey[600]),
                               textAlign: TextAlign.center,
                             ),
                           ),
+                          // Можна додати кнопку "Оновити"
+                          TextButton(
+                              onPressed: () {
+                                // Якщо у провайдера є метод refresh або fetchLists
+                                // provider.fetchLists();
+                              },
+                              child: const Text("Спробувати ще раз")
+                          )
                         ],
                       ),
                     ),
@@ -153,7 +168,6 @@ class _ListsPageState extends State<ListsPage> {
                         itemCount: provider.lists.length,
                         itemBuilder: (context, index) {
                           final list = provider.lists[index];
-                          // Переконайся, що ShoppingListItemCard приймає модель з String id
                           return ShoppingListItemCard(list: list);
                         },
                       ),
@@ -161,7 +175,7 @@ class _ListsPageState extends State<ListsPage> {
               ],
             ),
 
-            // --- КНОПКА ДОДАВАННЯ (FAB) ---
+            // --- FAB ---
             Positioned(
               bottom: 12,
               right: 24,

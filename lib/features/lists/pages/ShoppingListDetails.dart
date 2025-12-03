@@ -174,7 +174,9 @@ class _ShoppingListDetailsPageState extends State<ShoppingListDetailsPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     _buildActionButton(Icons.add, "Додати", () => _showAddItemModal(context, provider, list!.id)),
-                    _buildActionButton(Icons.person_add_alt_1, "Поділитися", () {}),
+                    _buildActionButton(Icons.person_add_alt_1, "Поділитися", () {
+                      context.go('/lists/${list!.id}/share');
+                    }),
                     _buildActionButton(Icons.notifications_active, "Нагадати", () {}),
                   ],
                 ),

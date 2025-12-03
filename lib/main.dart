@@ -42,7 +42,12 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AppAuthProvider()),
-        ChangeNotifierProvider(create: (_) => ShoppingListsProvider()),
+        ChangeNotifierProxyProvider<AppAuthProvider, ShoppingListsProvider>(
+          create: (_) => ShoppingListsProvider(),
+          update: (context, auth, previousListsProvider) {
+            return previousListsProvider!..updateUser(auth.currentUser);
+          },
+        ),
       ],
       child: Consumer<AppAuthProvider>(
         builder: (context, authProvider, _) {

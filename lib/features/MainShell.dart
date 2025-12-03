@@ -28,10 +28,6 @@ class MainShell extends StatelessWidget {
             label: "Списки",
           ),
           BottomNavigationBarItem(
-            icon: Text("🤝", style: TextStyle(fontSize: 24)),
-            label: "Поділитися",
-          ),
-          BottomNavigationBarItem(
             icon: Text("📊", style: TextStyle(fontSize: 24)),
             label: "Статистика",
           ),

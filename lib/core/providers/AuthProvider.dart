@@ -28,6 +28,7 @@ class AppAuthProvider extends ChangeNotifier {
       email: email,
       password: password,
     );
+    notifyListeners();
   }
 
   Future<void> passwordForget() async {

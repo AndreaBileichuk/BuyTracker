@@ -58,10 +58,6 @@ class _StatisticsPageState extends State<StatisticsPage> {
                 ),
                 child: Row(
                   children: [
-                    IconButton(
-                      icon: const Icon(Icons.arrow_back, color: Colors.white),
-                      onPressed: () => context.pop(),
-                    ),
                     const SizedBox(width: 8),
                     Container(
                       padding: const EdgeInsets.all(10),
@@ -240,9 +236,9 @@ class _StatisticsPageState extends State<StatisticsPage> {
     for (var list in lists) {
       int key = 0;
       if (_selectedPeriod == 'week' || _selectedPeriod == 'month') {
-        key = list.updatedAt.day; // Групуємо по днях
+        key = list.updatedAt.day;
       } else {
-        key = list.updatedAt.month; // Групуємо по місяцях
+        key = list.updatedAt.month;
       }
       dataMap[key] = (dataMap[key] ?? 0) + 1;
     }

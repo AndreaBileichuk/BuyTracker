@@ -45,24 +45,6 @@ class ProfilePage extends StatelessWidget {
 
             const SizedBox(height: 16),
 
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: ElevatedButton(
-                onPressed: () {
-                  FirebaseCrashlytics.instance.crash();
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
-                  foregroundColor: Colors.white,
-                  minimumSize: const Size(double.infinity, 50),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                child: const Text('Згенерувати Test Crash'),
-              ),
-            ),
-
             _buildSectionTitle("Дії"),
             _buildInfoCard(
               children: [

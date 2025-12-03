@@ -10,6 +10,7 @@ import 'auth/auth_wrapper_page.dart';
 import 'home/home_page.dart';
 import 'lists/pages/EditListPage.dart';
 import 'lists/pages/ListsPage.dart';
+import 'lists/pages/ShareListPage.dart';
 import 'lists/pages/ShoppingListDetails.dart';
 import 'lists/pages/CreateListPage.dart';
 
@@ -78,6 +79,13 @@ class AppRouter {
                     builder: (context, state) {
                       final id = state.pathParameters['id']!;
                       return EditListPage(listId: id);
+                    },
+                  ),
+                  GoRoute(
+                    path: 'share',
+                    builder: (context, state) {
+                      final listId = state.pathParameters['id']!;
+                      return ShareListPage(listId: listId);
                     },
                   ),
                 ],

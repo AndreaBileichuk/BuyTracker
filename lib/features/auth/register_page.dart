@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../core/providers/AuthProvider.dart';
-import 'common/custom_text_field.dart';
+import 'widgets/custom_text_field.dart';
 
 class RegisterPage extends StatefulWidget {
   final Function functionRedirect;

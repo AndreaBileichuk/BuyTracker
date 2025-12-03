@@ -43,6 +43,7 @@ dependencies:
   cloud_firestore: ^5.6.12
   fl_chart: ^1.1.1
   intl: ^0.20.2
+  share_plus: ^10.0.0
 
 dev_dependencies:
   flutter_test:

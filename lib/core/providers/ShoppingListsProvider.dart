@@ -17,9 +17,22 @@ class ShoppingListsProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get error => _error;
 
-  // Ініціалізація: підписуємось на стрім одразу при створенні провайдера
   ShoppingListsProvider() {
     _initSubscription();
+  }
+
+  void updateUser(User? user) {
+    _subscription?.cancel();
+
+    _error = null;
+    _lists = [];
+    _isLoading = false;
+
+    if (user != null) {
+      _initSubscription();
+    } else {
+      notifyListeners();
+    }
   }
 
   void _initSubscription() {
