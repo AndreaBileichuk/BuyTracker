@@ -17,18 +17,18 @@ class ShoppingListRepository {
         .orderBy('updatedAt', descending: true)
         .snapshots()
         .asyncMap((snapshot) async {
-      List<ShoppingListModel> fullLists = [];
+          List<ShoppingListModel> fullLists = [];
 
-      for (var doc in snapshot.docs) {
-        final itemsSnapshot = await doc.reference.collection('items').get();
-        final items = itemsSnapshot.docs
-            .map((itemDoc) => ShoppingListItem.fromSnapshot(itemDoc))
-            .toList();
+          for (var doc in snapshot.docs) {
+            final itemsSnapshot = await doc.reference.collection('items').get();
+            final items = itemsSnapshot.docs
+                .map((itemDoc) => ShoppingListItem.fromSnapshot(itemDoc))
+                .toList();
 
-        fullLists.add(ShoppingListModel.fromSnapshot(doc, items));
-      }
-      return fullLists;
-    });
+            fullLists.add(ShoppingListModel.fromSnapshot(doc, items));
+          }
+          return fullLists;
+        });
   }
 
   Future<ShoppingListModel?> getListById(String listId) async {
@@ -49,7 +49,9 @@ class ShoppingListRepository {
   }
 
   Future<void> createList(ShoppingListModel list) async {
-    DocumentReference docRef = await _db.collection('shopping_lists').add(list.toMap());
+    DocumentReference docRef = await _db
+        .collection('shopping_lists')
+        .add(list.toMap());
 
     for (var item in list.items) {
       final itemMap = item.toMap();
@@ -73,41 +75,56 @@ class ShoppingListRepository {
 
   // --- Методи для товарів ---
   Future<void> addItem(String listId, ShoppingListItem item) async {
-    await _db.collection('shopping_lists').doc(listId).collection('items').add(item.toMap());
+    await _db
+        .collection('shopping_lists')
+        .doc(listId)
+        .collection('items')
+        .add(item.toMap());
     _updateTimestamp(listId);
   }
 
-  Future<void> updateItemStatusWithPrice(String listId, String itemId, bool isPurchased, double? price) async {
+  Future<void> updateItemStatusWithPrice(
+    String listId,
+    String itemId,
+    bool isPurchased,
+    double? price,
+  ) async {
     await _db
         .collection('shopping_lists')
         .doc(listId)
         .collection('items')
         .doc(itemId)
-        .update({
-      'isPurchased': isPurchased,
-      'price': price,
-    });
+        .update({'isPurchased': isPurchased, 'price': price});
   }
 
-  Future<void> updateItem(String listId, String itemId, String name, double quantity, String unit) async {
+  Future<void> updateItem(
+    String listId,
+    String itemId,
+    String name,
+    double quantity,
+    String unit,
+  ) async {
     await _db
         .collection('shopping_lists')
         .doc(listId)
         .collection('items')
         .doc(itemId)
-        .update({
-      'name': name,
-      'quantity': quantity,
-      'unit': unit,
-    });
+        .update({'name': name, 'quantity': quantity, 'unit': unit});
   }
 
   Future<void> deleteItem(String listId, String itemId) async {
-    await _db.collection('shopping_lists').doc(listId).collection('items').doc(itemId).delete();
+    await _db
+        .collection('shopping_lists')
+        .doc(listId)
+        .collection('items')
+        .doc(itemId)
+        .delete();
     _updateTimestamp(listId);
   }
 
   Future<void> _updateTimestamp(String listId) async {
-    await _db.collection('shopping_lists').doc(listId).update({'updatedAt': Timestamp.now()});
+    await _db.collection('shopping_lists').doc(listId).update({
+      'updatedAt': Timestamp.now(),
+    });
   }
 }
