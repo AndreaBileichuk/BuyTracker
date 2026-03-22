@@ -13,13 +13,18 @@ import 'lists/pages/ListsPage.dart';
 import 'lists/pages/ShareListPage.dart';
 import 'lists/pages/ShoppingListDetails.dart';
 import 'lists/pages/CreateListPage.dart';
+import 'reminders/pages/RemindersPage.dart';
+import 'reminders/pages/CreateReminderPage.dart';
 
 class AppRouter {
+  static final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
+
   final AppAuthProvider authProvider;
 
   AppRouter(this.authProvider);
 
   late final GoRouter router = GoRouter(
+    navigatorKey: rootNavigatorKey,
     refreshListenable: authProvider,
 
     initialLocation: '/login',
@@ -98,8 +103,21 @@ class AppRouter {
           ),
           GoRoute(
             path: '/stats',
-            builder: (context, state) => const StatisticsPage()
-          )
+            builder: (context, state) => const StatisticsPage(),
+          ),
+          GoRoute(
+            path: '/reminders',
+            builder: (context, state) => const RemindersPage(),
+            routes: [
+              GoRoute(
+                path: 'create',
+                builder: (context, state) {
+                  final listId = state.uri.queryParameters['listId'];
+                  return CreateReminderPage(preselectedListId: listId);
+                },
+              ),
+            ],
+          ),
         ],
         observers: [
           FirebaseAnalyticsObserver(analytics: analytics),
