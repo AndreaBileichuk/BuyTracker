@@ -9,6 +9,9 @@ import 'package:provider/provider.dart';
 import 'core/providers/ShoppingListsProvider.dart';
 import 'features/AppRouter.dart';
 
+import 'features/reminders/providers/RemindersProvider.dart';
+import 'core/services/NotificationService.dart';
+
 late FirebaseAnalytics analytics;
 
 void main() async {
@@ -20,6 +23,9 @@ void main() async {
 
   // Ініціалізуємо Firebase Analytics
   analytics = FirebaseAnalytics.instance;
+
+  // Ініціалізуємо локальні сповіщення
+  await NotificationService().init();
 
   // Crashlytics
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
@@ -48,6 +54,7 @@ class MyApp extends StatelessWidget {
             return previousListsProvider!..updateUser(auth.currentUser);
           },
         ),
+        ChangeNotifierProvider(create: (_) => RemindersProvider()),
       ],
       child: Consumer<AppAuthProvider>(
         builder: (context, authProvider, _) {

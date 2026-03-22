@@ -31,6 +31,10 @@ class MainShell extends StatelessWidget {
             icon: Text("📊", style: TextStyle(fontSize: 24)),
             label: "Статистика",
           ),
+          BottomNavigationBarItem(
+            icon: Text("⏰", style: TextStyle(fontSize: 24)),
+            label: "Нагадування",
+          ),
         ],
       ),
     );
@@ -43,6 +47,9 @@ class MainShell extends StatelessWidget {
     }
     if (location.startsWith('/stats')) {
       return 2;
+    }
+    if (location.startsWith('/reminders')) {
+      return 3;
     }
     return 0;
   }
@@ -58,6 +65,9 @@ class MainShell extends StatelessWidget {
         break;
       case 2:
         context.go('/stats');
+        break;
+      case 3:
+        context.go('/reminders');
         break;
     }
   }

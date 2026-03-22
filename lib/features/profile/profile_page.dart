@@ -48,7 +48,7 @@ class ProfilePage extends StatelessWidget {
             _buildSectionTitle("Дії"),
             _buildInfoCard(
               children: [
-                _buildActionRow(Icons.notifications_none, "Нагадування", () {}),
+                _buildActionRow(Icons.notifications_none, "Нагадування", () => context.go('/reminders')),
                 const Divider(height: 1, indent: 16, endIndent: 16),
                 _buildActionRow(Icons.settings_outlined, "Налаштування", () {}),
               ],

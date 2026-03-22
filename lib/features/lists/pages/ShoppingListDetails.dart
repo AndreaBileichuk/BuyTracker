@@ -177,7 +177,9 @@ class _ShoppingListDetailsPageState extends State<ShoppingListDetailsPage> {
                     _buildActionButton(Icons.person_add_alt_1, "Поділитися", () {
                       context.go('/lists/${list!.id}/share');
                     }),
-                    _buildActionButton(Icons.notifications_active, "Нагадати", () {}),
+                    _buildActionButton(Icons.notifications_active, "Нагадати", () {
+                      context.push('/reminders/create?listId=${list!.id}');
+                    }),
                   ],
                 ),
               ),
