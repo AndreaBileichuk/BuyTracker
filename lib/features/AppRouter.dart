@@ -13,6 +13,7 @@ import 'lists/pages/ListsPage.dart';
 import 'lists/pages/ShareListPage.dart';
 import 'lists/pages/ShoppingListDetails.dart';
 import 'lists/pages/CreateListPage.dart';
+import 'settings/pages/SettingsPage.dart';
 import 'reminders/pages/RemindersPage.dart';
 import 'reminders/pages/CreateReminderPage.dart';
 
@@ -51,6 +52,10 @@ class AppRouter {
       GoRoute(
         path: '/login',
         builder: (context, state) => AuthWrapperPage(),
+      ),
+      GoRoute(
+        path: '/settings',
+        builder: (context, state) => const SettingsPage(),
       ),
 
       ShellRoute(

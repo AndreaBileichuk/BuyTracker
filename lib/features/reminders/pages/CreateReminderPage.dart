@@ -181,7 +181,7 @@ class _CreateReminderPageState extends State<CreateReminderPage> {
             ElevatedButton(
               onPressed: _isLoading ? null : _saveReminder,
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF667EEA),
+                backgroundColor: Theme.of(context).colorScheme.primary,
                 padding: const EdgeInsets.symmetric(vertical: 16),
               ),
               child: _isLoading

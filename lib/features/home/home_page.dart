@@ -29,9 +29,9 @@ class HomePage extends StatelessWidget {
             Container(
               width: double.infinity,
               padding: const EdgeInsets.fromLTRB(24, 60, 24, 24),
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [Color(0xFF667EEA), Color(0xFF764BA2)],
+                  colors: [Theme.of(context).colorScheme.primary, Theme.of(context).colorScheme.secondary],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
@@ -86,11 +86,11 @@ class HomePage extends StatelessWidget {
                   ),
                   GestureDetector(
                     onTap: () => context.go('/lists'),
-                    child: const Text(
+                    child: Text(
                       "Всі →",
                       style: TextStyle(
                         fontSize: 16,
-                        color: Color(0xFF667EEA),
+                        color: Theme.of(context).colorScheme.primary,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -104,7 +104,7 @@ class HomePage extends StatelessWidget {
                   ? Center(
                 child: Text(
                   "Тут будуть ваші списки покупок",
-                  style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                  style: TextStyle(fontSize: 16, color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.6)),
                 ),
               )
                   : ListView(
@@ -128,14 +128,14 @@ class HomePage extends StatelessWidget {
             height: 54,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              gradient: const LinearGradient(
-                colors: [Color(0xFF667EEA), Color(0xFF764BA2)],
+              gradient: LinearGradient(
+                colors: [Theme.of(context).colorScheme.primary, Theme.of(context).colorScheme.secondary],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: const Color(0xFF667EEA).withOpacity(0.4),
+                  color: Theme.of(context).colorScheme.primary.withOpacity(0.4),
                   blurRadius: 12,
                   offset: const Offset(0, 4),
                 ),

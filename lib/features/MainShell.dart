@@ -12,10 +12,10 @@ class MainShell extends StatelessWidget {
       body: child,
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.white,
-        selectedItemColor: const Color(0xFF667EEA),
+        backgroundColor: Theme.of(context).cardColor,
+        selectedItemColor: Theme.of(context).colorScheme.primary,
         selectedFontSize: 16,
-        unselectedItemColor: Colors.grey[600],
+        unselectedItemColor: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.6) ?? Colors.grey[600],
         currentIndex: _calculateSelectedIndex(context),
         onTap: (index) => _onItemTapped(index, context),
         items: const [

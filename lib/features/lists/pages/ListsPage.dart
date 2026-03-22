@@ -33,9 +33,9 @@ class _ListsPageState extends State<ListsPage> {
                 Container(
                   width: double.infinity,
                   padding: const EdgeInsets.fromLTRB(24, 60, 24, 24),
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     gradient: LinearGradient(
-                      colors: [Color(0xFF667EEA), Color(0xFF764BA2)],
+                      colors: [Theme.of(context).colorScheme.primary, Theme.of(context).colorScheme.secondary],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                     ),
@@ -128,14 +128,14 @@ class _ListsPageState extends State<ListsPage> {
                           const SizedBox(height: 16),
                           Text(
                             "Ой, щось пішло не так!",
-                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.grey[800]),
+                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Theme.of(context).textTheme.bodyLarge?.color),
                           ),
                           const SizedBox(height: 8),
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 32.0),
                             child: Text(
                               provider.error!, // Тут виводиться текст помилки
-                              style: TextStyle(color: Colors.grey[600]),
+                              style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.6)),
                               textAlign: TextAlign.center,
                             ),
                           ),
@@ -152,12 +152,12 @@ class _ListsPageState extends State<ListsPage> {
                     ),
                   )
                 else if (provider.lists.isEmpty)
-                    const Expanded(
+                    Expanded(
                       child: Center(
                         child: Text(
                           "Списки не знайдено.\nСтворіть свій перший список!",
                           textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.grey, fontSize: 16),
+                          style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.6), fontSize: 16),
                         ),
                       ),
                     )
@@ -184,14 +184,14 @@ class _ListsPageState extends State<ListsPage> {
                 height: 54,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  gradient: const LinearGradient(
-                    colors: [Color(0xFF667EEA), Color(0xFF764BA2)],
+                  gradient: LinearGradient(
+                    colors: [Theme.of(context).colorScheme.primary, Theme.of(context).colorScheme.secondary],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: const Color(0xFF667EEA).withOpacity(0.4),
+                      color: Theme.of(context).colorScheme.primary.withOpacity(0.4),
                       blurRadius: 12,
                       offset: const Offset(0, 4),
                     ),

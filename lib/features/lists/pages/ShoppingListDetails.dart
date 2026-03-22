@@ -45,7 +45,7 @@ class _ShoppingListDetailsPageState extends State<ShoppingListDetailsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FA),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Consumer<ShoppingListsProvider>(
         builder: (context, provider, child) {
           ShoppingListModel? list;
@@ -78,9 +78,9 @@ class _ShoppingListDetailsPageState extends State<ShoppingListDetailsPage> {
             children: [
               Container(
                 padding: const EdgeInsets.fromLTRB(20, 50, 20, 30),
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [Color(0xFF667EEA), Color(0xFF764BA2)],
+                    colors: [Theme.of(context).colorScheme.primary, Theme.of(context).colorScheme.secondary],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
@@ -196,7 +196,7 @@ class _ShoppingListDetailsPageState extends State<ShoppingListDetailsPage> {
                       return Container(
                         margin: const EdgeInsets.only(bottom: 12),
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: Theme.of(context).cardColor,
                           borderRadius: BorderRadius.circular(16),
                           boxShadow: [
                             BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 8, offset: const Offset(0, 2)),
@@ -223,18 +223,18 @@ class _ShoppingListDetailsPageState extends State<ShoppingListDetailsPage> {
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                               decoration: item.isPurchased ? TextDecoration.lineThrough : null,
-                              color: item.isPurchased ? Colors.grey : Colors.black87,
+                              color: item.isPurchased ? Colors.grey : Theme.of(context).textTheme.bodyLarge?.color,
                             ),
                           ),
                           subtitle: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text("${item.quantity} ${item.unit}.", style: TextStyle(color: Colors.grey[600])),
+                              Text("${item.quantity} ${item.unit}.", style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.6))),
                               // Якщо куплено і є ціна, показуємо її
                               if (item.isPurchased && item.price != null && item.price! > 0)
                                 Text(
                                   "Ціна: ${item.price!.toStringAsFixed(2)} ₴",
-                                  style: const TextStyle(color: Color(0xFF667EEA), fontWeight: FontWeight.bold, fontSize: 12),
+                                  style: TextStyle(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.bold, fontSize: 12),
                                 )
                             ],
                           ),
@@ -286,7 +286,7 @@ class _ShoppingListDetailsPageState extends State<ShoppingListDetailsPage> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
               decoration: BoxDecoration(
-                color: Colors.grey[100],
+                color: Theme.of(context).scaffoldBackgroundColor,
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(color: Colors.grey.shade300),
               ),
@@ -318,7 +318,7 @@ class _ShoppingListDetailsPageState extends State<ShoppingListDetailsPage> {
                 Navigator.pop(ctx);
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF667EEA),
+                backgroundColor: Theme.of(context).colorScheme.primary,
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               ),
@@ -424,7 +424,7 @@ class _ShoppingListDetailsPageState extends State<ShoppingListDetailsPage> {
                         }
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF667EEA),
+                        backgroundColor: Theme.of(context).colorScheme.primary,
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                       ),
@@ -529,7 +529,7 @@ class _ShoppingListDetailsPageState extends State<ShoppingListDetailsPage> {
                         }
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF667EEA),
+                        backgroundColor: Theme.of(context).colorScheme.primary,
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                       ),
@@ -554,7 +554,7 @@ class _ShoppingListDetailsPageState extends State<ShoppingListDetailsPage> {
         alignment: Alignment.topRight,
         child: Container(
           decoration: BoxDecoration(
-            color: const Color(0xFF667EEA),
+            color: Theme.of(context).colorScheme.primary,
             borderRadius: BorderRadius.circular(12),
           ),
           child: Column(
@@ -616,13 +616,13 @@ class _ShoppingListDetailsPageState extends State<ShoppingListDetailsPage> {
         child: Container(
           margin: const EdgeInsets.symmetric(horizontal: 4),
           padding: const EdgeInsets.symmetric(vertical: 12),
-          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12)),
+          decoration: BoxDecoration(color: Theme.of(context).cardColor, borderRadius: BorderRadius.circular(12)),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, size: 20, color: Colors.grey[700]),
+              Icon(icon, size: 20, color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.7)),
               const SizedBox(width: 8),
-              Text(label, style: TextStyle(color: const Color(0xFF667EEA), fontWeight: FontWeight.bold, fontSize: 14)),
+              Text(label, style: TextStyle(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.bold, fontSize: 14)),
             ],
           ),
         ),

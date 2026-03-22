@@ -27,7 +27,7 @@ class _AuthWrapperPageState extends State<AuthWrapperPage> {
                 padding: EdgeInsets.all(30),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [Color(0xFF667EEA), Color(0xFF764BA2)],
+                    colors: [Theme.of(context).colorScheme.primary, Theme.of(context).colorScheme.secondary],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
@@ -68,8 +68,8 @@ class _AuthWrapperPageState extends State<AuthWrapperPage> {
                             borderRadius: BorderRadius.circular(12),
                           ),
                           backgroundColor: _isLoginMode
-                              ? Color(0xFF667EEA)
-                              : Color(0xFFF5F5F5),
+                              ? Theme.of(context).colorScheme.primary
+                              : const Color(0xFFF5F5F5),
                           padding: EdgeInsets.symmetric(vertical: 14),
                         ),
                         child: Text(
@@ -95,8 +95,8 @@ class _AuthWrapperPageState extends State<AuthWrapperPage> {
                             borderRadius: BorderRadius.circular(12),
                           ),
                           backgroundColor: !_isLoginMode
-                              ? Color(0xFF667EEA)
-                              : Color(0xFFF5F5F5),
+                              ? Theme.of(context).colorScheme.primary
+                              : const Color(0xFFF5F5F5),
                           padding: EdgeInsets.symmetric(vertical: 14),
                         ),
                         child: Text(

@@ -20,21 +20,23 @@ class ProfilePage extends StatelessWidget {
     }
 
     return Scaffold(
-      backgroundColor: Colors.grey[100],
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildHeader(context, user),
 
-            _buildSectionTitle("Інформація"),
+            _buildSectionTitle(context, "Інформація"),
             _buildInfoCard(
+              context,
               children: [
-                _buildInfoRow("Ім'я", user.displayName ?? 'User'),
+                _buildInfoRow(context, "Ім'я", user.displayName ?? 'User'),
                 const Divider(height: 1, indent: 16, endIndent: 16),
-                _buildInfoRow("Email", user.email ?? ''),
+                _buildInfoRow(context, "Email", user.email ?? ''),
                 const Divider(height: 1, indent: 16, endIndent: 16),
                 _buildInfoRow(
+                  context,
                   "Дата реєстрації",
                   user.metadata.creationTime != null
                       ? "${user.metadata.creationTime!.day}.${user.metadata.creationTime!.month}.${user.metadata.creationTime!.year}"
@@ -45,12 +47,13 @@ class ProfilePage extends StatelessWidget {
 
             const SizedBox(height: 16),
 
-            _buildSectionTitle("Дії"),
+            _buildSectionTitle(context, "Дії"),
             _buildInfoCard(
+              context,
               children: [
-                _buildActionRow(Icons.notifications_none, "Нагадування", () => context.go('/reminders')),
+                _buildActionRow(context, Icons.notifications_none, "Нагадування", () => context.go('/reminders')),
                 const Divider(height: 1, indent: 16, endIndent: 16),
-                _buildActionRow(Icons.settings_outlined, "Налаштування", () {}),
+                _buildActionRow(context, Icons.settings_outlined, "Налаштування", () => context.push('/settings')),
               ],
             ),
 
@@ -69,8 +72,8 @@ class ProfilePage extends StatelessWidget {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.only(top: 25, bottom: 15),
-      decoration: const BoxDecoration(
-        color: Color(0xFF6B7FEA),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.primary,
       ),
       child: Column(
         children: [
@@ -116,26 +119,26 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  Widget _buildSectionTitle(String title) {
+  Widget _buildSectionTitle(BuildContext context, String title) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(24, 24, 24, 8),
       child: Text(
         title,
-        style: const TextStyle(
+        style: TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.bold,
-          color: Colors.black87,
+          color: Theme.of(context).textTheme.bodyLarge?.color,
         ),
       ),
     );
   }
 
-  Widget _buildInfoCard({required List<Widget> children}) {
+  Widget _buildInfoCard(BuildContext context, {required List<Widget> children}) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
@@ -150,13 +153,13 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoRow(String title, String value) {
+  Widget _buildInfoRow(BuildContext context, String title, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(title, style: TextStyle(fontSize: 16, color: Colors.grey[600])),
+          Text(title, style: TextStyle(fontSize: 16, color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.6))),
           Flexible(
             child: Text(
               value,
@@ -169,11 +172,11 @@ class ProfilePage extends StatelessWidget {
     );
   }
 
-  Widget _buildActionRow(IconData icon, String title, VoidCallback onTap) {
+  Widget _buildActionRow(BuildContext context, IconData icon, String title, VoidCallback onTap) {
     return ListTile(
-      leading: Icon(icon, color: Colors.grey[600]),
+      leading: Icon(icon, color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.6)),
       title: Text(title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-      trailing: const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
+      trailing: Icon(Icons.arrow_forward_ios, size: 16, color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.6)),
       onTap: onTap,
     );
   }

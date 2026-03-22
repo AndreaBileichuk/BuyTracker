@@ -106,9 +106,9 @@ class _CreateListPageState extends State<CreateListPage> {
             // ===== Header =====
             Container(
               padding: const EdgeInsets.fromLTRB(20, 50, 20, 30),
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [Color(0xFF667EEA), Color(0xFF764BA2)],
+                  colors: [Theme.of(context).colorScheme.primary, Theme.of(context).colorScheme.secondary],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
@@ -179,7 +179,7 @@ class _CreateListPageState extends State<CreateListPage> {
                             height: 50,
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
-                              color: isSelected ? const Color(0xFF667EEA) : Colors.grey[100],
+                              color: isSelected ? Theme.of(context).colorScheme.primary : Colors.grey[100],
                               borderRadius: BorderRadius.circular(12),
                               border: isSelected ? null : Border.all(color: Colors.grey.shade300),
                             ),
@@ -253,7 +253,7 @@ class _CreateListPageState extends State<CreateListPage> {
                             ElevatedButton(
                               onPressed: _addItem,
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFF667EEA),
+                                backgroundColor: Theme.of(context).colorScheme.primary,
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                                 padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                               ),
@@ -313,12 +313,12 @@ class _CreateListPageState extends State<CreateListPage> {
                       gradient: LinearGradient(
                         colors: _isCreating
                             ? [Colors.grey, Colors.grey] // Сірий колір при завантаженні
-                            : [const Color(0xFF667EEA), const Color(0xFF764BA2)],
+                            : [Theme.of(context).colorScheme.primary, Theme.of(context).colorScheme.secondary],
                       ),
                       borderRadius: BorderRadius.circular(16),
                       boxShadow: [
                         BoxShadow(
-                          color: const Color(0xFF667EEA).withOpacity(0.4),
+                          color: Theme.of(context).colorScheme.primary.withOpacity(0.4),
                           blurRadius: 10,
                           offset: const Offset(0, 4),
                         ),
