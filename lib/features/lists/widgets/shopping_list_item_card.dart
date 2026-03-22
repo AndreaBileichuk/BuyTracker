@@ -23,7 +23,7 @@ class ShoppingListItemCard extends StatelessWidget {
         ],
       ),
       child: Material(
-        color: Colors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(16),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
@@ -55,7 +55,7 @@ class ShoppingListItemCard extends StatelessWidget {
                                 : "Оновлено ${list.updatedAt.hour}:${list.updatedAt.minute.toString().padLeft(2, '0')}",
                             style: TextStyle(
                               fontSize: 14,
-                              color: Colors.grey[600],
+                              color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.6),
                             ),
                           ),
                         ],
@@ -64,7 +64,7 @@ class ShoppingListItemCard extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF667EEA).withOpacity(0.1),
+                        color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
@@ -80,14 +80,14 @@ class ShoppingListItemCard extends StatelessWidget {
                     Icon(
                       Icons.check_circle_outline,
                       size: 18,
-                      color: Colors.grey[700],
+                      color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.7),
                     ),
                     const SizedBox(width: 6),
                     Text(
                       "${list.purchasedItems} з ${list.totalItems} товарів",
                       style: TextStyle(
                         fontSize: 14,
-                        color: Colors.grey[700],
+                        color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.7),
                       ),
                     ),
                     const SizedBox(width: 16),
@@ -101,7 +101,7 @@ class ShoppingListItemCard extends StatelessWidget {
                       "${list.totalBudget.toStringAsFixed(2)} грн",
                       style: TextStyle(
                         fontSize: 14,
-                        color: Colors.grey[700],
+                        color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.7),
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -113,8 +113,8 @@ class ShoppingListItemCard extends StatelessWidget {
                   child: LinearProgressIndicator(
                     value: list.progressPercentage / 100,
                     backgroundColor: Colors.grey[200],
-                    valueColor: const AlwaysStoppedAnimation<Color>(
-                      Color(0xFF667EEA),
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      Theme.of(context).colorScheme.primary,
                     ),
                     minHeight: 6,
                   ),

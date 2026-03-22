@@ -224,7 +224,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(4),
                       ),
-                      activeColor: const Color(0xFF667EEA),
+                      activeColor: Theme.of(context).colorScheme.primary,
                       onChanged: (bool? value) {
                         setState(() => _agreedToTerms = value ?? false);
                       },
@@ -245,11 +245,11 @@ class _RegisterPageState extends State<RegisterPage> {
                           onTap: () {
                             print("Open Terms of Use");
                           },
-                          child: const Text(
+                          child: Text(
                             "Умовами використання",
                             style: TextStyle(
                               fontSize: 14,
-                              color: Color(0xFF667EEA),
+                              color: Theme.of(context).colorScheme.primary,
                               decoration: TextDecoration.underline,
                             ),
                           ),
@@ -265,11 +265,11 @@ class _RegisterPageState extends State<RegisterPage> {
                           onTap: () {
                             print("Open Privacy Policy");
                           },
-                          child: const Text(
+                          child: Text(
                             "Політикою конфіденційності",
                             style: TextStyle(
                               fontSize: 14,
-                              color: Color(0xFF667EEA),
+                              color: Theme.of(context).colorScheme.primary,
                               decoration: TextDecoration.underline,
                             ),
                           ),
@@ -307,7 +307,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       "Увійти",
                       style: TextStyle(
                         fontSize: 16,
-                        color: Color(0xFF3B5AFE),
+                        color: Theme.of(context).colorScheme.primary,
                         fontWeight: FontWeight.w500,
                       ),
                     ),

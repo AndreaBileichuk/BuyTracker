@@ -99,9 +99,9 @@ class _EditListPageState extends State<EditListPage> {
             // ===== Header =====
             Container(
               padding: const EdgeInsets.fromLTRB(20, 50, 20, 30),
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [Color(0xFF667EEA), Color(0xFF764BA2)],
+                  colors: [Theme.of(context).colorScheme.primary, Theme.of(context).colorScheme.secondary],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
@@ -172,7 +172,7 @@ class _EditListPageState extends State<EditListPage> {
                             height: 50,
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
-                              color: isSelected ? const Color(0xFF667EEA) : Colors.grey[100],
+                              color: isSelected ? Theme.of(context).colorScheme.primary : Colors.grey[100],
                               borderRadius: BorderRadius.circular(12),
                               border: isSelected ? null : Border.all(color: Colors.grey.shade300),
                             ),
@@ -205,13 +205,13 @@ class _EditListPageState extends State<EditListPage> {
                     width: double.infinity,
                     height: 56,
                     decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        colors: [Color(0xFF667EEA), Color(0xFF764BA2)],
+                      gradient: LinearGradient(
+                        colors: [Theme.of(context).colorScheme.primary, Theme.of(context).colorScheme.secondary],
                       ),
                       borderRadius: BorderRadius.circular(16),
                       boxShadow: [
                         BoxShadow(
-                          color: const Color(0xFF667EEA).withOpacity(0.4),
+                          color: Theme.of(context).colorScheme.primary.withOpacity(0.4),
                           blurRadius: 10,
                           offset: const Offset(0, 4),
                         ),

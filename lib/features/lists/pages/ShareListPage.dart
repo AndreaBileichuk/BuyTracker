@@ -23,9 +23,9 @@ class ShareListPage extends StatelessWidget {
           onPressed: () => context.pop(),
         ),
         flexibleSpace: Container(
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [Color(0xFF667EEA), Color(0xFF764BA2)],
+              colors: [Theme.of(context).colorScheme.primary, Theme.of(context).colorScheme.secondary],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -38,9 +38,9 @@ class ShareListPage extends StatelessWidget {
           Container(
             width: double.infinity,
             padding: const EdgeInsets.fromLTRB(20, 10, 20, 30),
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [Color(0xFF667EEA), Color(0xFF764BA2)],
+                colors: [Theme.of(context).colorScheme.primary, Theme.of(context).colorScheme.secondary],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
@@ -90,7 +90,7 @@ class ShareListPage extends StatelessWidget {
                         ),
                       ),
                       IconButton(
-                        icon: const Icon(Icons.copy, color: Color(0xFF667EEA)),
+                        icon: Icon(Icons.copy, color: Theme.of(context).colorScheme.primary),
                         onPressed: () {
                           Clipboard.setData(ClipboardData(text: shareLink));
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -121,7 +121,7 @@ class ShareListPage extends StatelessWidget {
                   Share.share(shareMessage);
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF667EEA),
+                  backgroundColor: Theme.of(context).colorScheme.primary,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                   elevation: 4,
                 ),

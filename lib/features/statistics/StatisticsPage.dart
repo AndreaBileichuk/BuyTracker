@@ -35,17 +35,21 @@ class _StatisticsPageState extends State<StatisticsPage> {
       lastDate: now,
       initialDateRange: _selectedDateRange,
       builder: (context, child) {
-        return Theme(
-          data: ThemeData.light().copyWith(
-            colorScheme: const ColorScheme.light(
-              primary: Color(0xFF667EEA),
-              onPrimary: Colors.white,
-              surface: Colors.white,
-              onSurface: Colors.black,
+          return Theme(
+            data: Theme.of(context).copyWith(
+              colorScheme: ColorScheme.light(
+                primary: Theme.of(context).colorScheme.primary,
+                onPrimary: Colors.white,
+                onSurface: Theme.of(context).textTheme.bodyLarge?.color ?? Colors.black87,
+              ),
+              textButtonTheme: TextButtonThemeData(
+                style: TextButton.styleFrom(
+                  foregroundColor: Theme.of(context).colorScheme.primary,
+                ),
+              ),
             ),
-          ),
-          child: child!,
-        );
+            child: child!,
+          );
       },
     );
 
@@ -59,7 +63,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FA),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Consumer<ShoppingListsProvider>(
         builder: (context, provider, child) {
           final now = DateTime.now();
@@ -89,9 +93,9 @@ class _StatisticsPageState extends State<StatisticsPage> {
             children: [
               Container(
                 padding: const EdgeInsets.fromLTRB(20, 50, 20, 30),
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [Color(0xFF667EEA), Color(0xFF764BA2)],
+                    colors: [Theme.of(context).colorScheme.primary, Theme.of(context).colorScheme.secondary],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
@@ -146,14 +150,14 @@ class _StatisticsPageState extends State<StatisticsPage> {
                           Expanded(
                             child: Text(
                               periodLabel,
-                              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.grey[800]),
+                              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Theme.of(context).textTheme.bodyLarge?.color),
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
                           TextButton.icon(
                             onPressed: _pickDateRange, 
-                            icon: const Icon(Icons.edit_calendar, size: 18, color: Color(0xFF667EEA)), 
-                            label: const Text("Змінити", style: TextStyle(color: Color(0xFF667EEA)))
+                            icon: Icon(Icons.edit_calendar, size: 18, color: Theme.of(context).colorScheme.primary), 
+                            label: Text("Змінити", style: TextStyle(color: Theme.of(context).colorScheme.primary))
                           )
                         ],
                       ),
@@ -163,7 +167,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
                         width: double.infinity,
                         padding: const EdgeInsets.all(24),
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: Theme.of(context).cardColor,
                           borderRadius: BorderRadius.circular(20),
                           boxShadow: [
                             BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 4)),
@@ -179,7 +183,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
                             const SizedBox(height: 8),
                             Text(
                               "Загальні витрати",
-                              style: TextStyle(color: Colors.grey[600], fontSize: 14),
+                              style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.6), fontSize: 14),
                             ),
                             const SizedBox(height: 40),
 
@@ -231,7 +235,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
                                     LineChartBarData(
                                       spots: chartSpots,
                                       isCurved: true,
-                                      color: const Color(0xFF667EEA),
+                                      color: Theme.of(context).colorScheme.primary,
                                       barWidth: 3,
                                       isStrokeCapRound: true,
                                       dotData: FlDotData(
@@ -240,15 +244,15 @@ class _StatisticsPageState extends State<StatisticsPage> {
                                           radius: 3,
                                           color: Colors.white,
                                           strokeWidth: 2,
-                                          strokeColor: const Color(0xFF667EEA),
+                                          strokeColor: Theme.of(context).colorScheme.primary,
                                         ),
                                       ),
                                       belowBarData: BarAreaData(
                                         show: true,
                                         gradient: LinearGradient(
                                           colors: [
-                                            const Color(0xFF667EEA).withOpacity(0.3),
-                                            const Color(0xFF764BA2).withOpacity(0.0),
+                                            Theme.of(context).colorScheme.primary.withOpacity(0.3),
+                                            Theme.of(context).colorScheme.secondary.withOpacity(0.0),
                                           ],
                                           begin: Alignment.topCenter,
                                           end: Alignment.bottomCenter,
@@ -323,7 +327,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 8, offset: const Offset(0, 4)),
@@ -343,7 +347,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
           const SizedBox(height: 12),
           Text(value, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
           const SizedBox(height: 4),
-          Text(title, style: TextStyle(color: Colors.grey[600], fontSize: 12)),
+          Text(title, style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.6), fontSize: 12)),
         ],
       ),
     );

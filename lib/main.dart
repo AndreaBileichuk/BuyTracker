@@ -11,6 +11,8 @@ import 'features/AppRouter.dart';
 
 import 'features/reminders/providers/RemindersProvider.dart';
 import 'core/services/NotificationService.dart';
+import 'core/theme/AppTheme.dart';
+import 'core/providers/ThemeProvider.dart';
 
 late FirebaseAnalytics analytics;
 
@@ -47,6 +49,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider(create: (_) => AppAuthProvider()),
         ChangeNotifierProxyProvider<AppAuthProvider, ShoppingListsProvider>(
           create: (_) => ShoppingListsProvider(),
@@ -56,15 +59,13 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(create: (_) => RemindersProvider()),
       ],
-      child: Consumer<AppAuthProvider>(
-        builder: (context, authProvider, _) {
+      child: Consumer2<AppAuthProvider, ThemeProvider>(
+        builder: (context, authProvider, themeProvider, _) {
           final router = AppRouter(authProvider).router;
 
           return MaterialApp.router(
             title: 'Buy Tracker',
-            theme: ThemeData(
-              primarySwatch: Colors.blue,
-            ),
+            theme: themeProvider.currentTheme,
             routerConfig: router,
           );
         },

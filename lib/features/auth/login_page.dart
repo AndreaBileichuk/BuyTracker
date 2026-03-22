@@ -154,7 +154,7 @@ class _LoginPageState extends State<LoginPage> {
                 child: Text(
                   "Забули пароль?",
                   style: TextStyle(
-                    color: Color(0xFF667EEA),
+                    color: Theme.of(context).colorScheme.primary,
                     fontSize: 14,
                   ),
                 ),
