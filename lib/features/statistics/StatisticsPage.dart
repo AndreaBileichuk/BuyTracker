@@ -1,10 +1,11 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 
 import '../../core/models/ShoppingListModel.dart';
 import '../../core/providers/ShoppingListsProvider.dart';
+import '../../core/services/StatisticsService.dart';
 
 class StatisticsPage extends StatefulWidget {
   const StatisticsPage({super.key});
@@ -14,7 +15,46 @@ class StatisticsPage extends StatefulWidget {
 }
 
 class _StatisticsPageState extends State<StatisticsPage> {
-  String _selectedPeriod = 'month';
+  DateTimeRange? _selectedDateRange;
+
+  @override
+  void initState() {
+    super.initState();
+    final now = DateTime.now();
+    _selectedDateRange = DateTimeRange(
+      start: now.subtract(const Duration(days: 7)),
+      end: now,
+    );
+  }
+
+  Future<void> _pickDateRange() async {
+    final now = DateTime.now();
+    final picked = await showDateRangePicker(
+      context: context,
+      firstDate: DateTime(2020),
+      lastDate: now,
+      initialDateRange: _selectedDateRange,
+      builder: (context, child) {
+        return Theme(
+          data: ThemeData.light().copyWith(
+            colorScheme: const ColorScheme.light(
+              primary: Color(0xFF667EEA),
+              onPrimary: Colors.white,
+              surface: Colors.white,
+              onSurface: Colors.black,
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+
+    if (picked != null) {
+      setState(() {
+        _selectedDateRange = picked;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,27 +63,27 @@ class _StatisticsPageState extends State<StatisticsPage> {
       body: Consumer<ShoppingListsProvider>(
         builder: (context, provider, child) {
           final now = DateTime.now();
-          List<ShoppingListModel> filteredLists = [];
-          String periodLabel = "";
+          final range = _selectedDateRange ?? DateTimeRange(start: now.subtract(const Duration(days: 7)), end: now);
+          final startOfDay = DateTime(range.start.year, range.start.month, range.start.day);
+          final endOfDay = DateTime(range.end.year, range.end.month, range.end.day, 23, 59, 59);
 
-          if (_selectedPeriod == 'week') {
-            final startOfWeek = now.subtract(Duration(days: now.weekday - 1));
-            filteredLists = provider.lists.where((l) => l.updatedAt.isAfter(startOfWeek)).toList();
-            periodLabel = "за цей тиждень";
-          } else if (_selectedPeriod == 'month') {
-            filteredLists = provider.lists.where((l) => l.updatedAt.month == now.month && l.updatedAt.year == now.year).toList();
-            periodLabel = "за цей місяць";
-          } else {
-            filteredLists = provider.lists.where((l) => l.updatedAt.year == now.year).toList();
-            periodLabel = "за цей рік";
-          }
+          List<ShoppingListModel> filteredLists = StatisticsService.filterListsByDateRange(
+            allLists: provider.lists, 
+            range: range,
+          );
+          
+          String periodLabel = "з ${DateFormat('dd.MM.yyyy').format(startOfDay)} по ${DateFormat('dd.MM.yyyy').format(endOfDay)}";
 
-          double totalSpent = 0;
-          for (var list in filteredLists) {
-            totalSpent += list.items
-                .where((i) => i.isPurchased)
-                .fold(0.0, (sum, item) => sum + (item.price ?? 0));
-          }
+          double totalSpent = StatisticsService.calculateTotalSpent(filteredLists);
+
+          final chartSpots = StatisticsService.generateChartSpots(
+            lists: filteredLists, 
+            range: range,
+          );
+          
+          final maxY = chartSpots.isEmpty ? 100.0 : chartSpots.map((e) => e.y).fold(0.0, (m, v) => v > m ? v : m);
+          // add 20% margin top
+          final adjustedMaxY = maxY > 0 ? maxY * 1.2 : 100.0;
 
           return Column(
             children: [
@@ -57,29 +97,37 @@ class _StatisticsPageState extends State<StatisticsPage> {
                   ),
                 ),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const SizedBox(width: 8),
-                    Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: const Icon(Icons.bar_chart, color: Colors.white, size: 28),
-                    ),
-                    const SizedBox(width: 16),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    Row(
                       children: [
-                        const Text(
-                          "Статистика",
-                          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+                        Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: const Icon(Icons.show_chart, color: Colors.white, size: 28),
                         ),
-                        Text(
-                          "Витрати",
-                          style: TextStyle(fontSize: 14, color: Colors.white.withOpacity(0.8)),
+                        const SizedBox(width: 16),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              "Статистика",
+                              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+                            ),
+                            Text(
+                              "Аналітика витрат",
+                              style: TextStyle(fontSize: 14, color: Colors.white.withOpacity(0.8)),
+                            ),
+                          ],
                         ),
                       ],
+                    ),
+                    IconButton(
+                        icon: const Icon(Icons.date_range, color: Colors.white, size: 28),
+                        onPressed: _pickDateRange,
                     ),
                   ],
                 ),
@@ -91,21 +139,25 @@ class _StatisticsPageState extends State<StatisticsPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        padding: const EdgeInsets.all(4),
-                        child: Row(
-                          children: [
-                            _buildTabButton("Тиждень", 'week'),
-                            _buildTabButton("Місяць", 'month'),
-                            _buildTabButton("Рік", 'year'),
-                          ],
-                        ),
+                      // Date range indicator
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              periodLabel,
+                              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.grey[800]),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          TextButton.icon(
+                            onPressed: _pickDateRange, 
+                            icon: const Icon(Icons.edit_calendar, size: 18, color: Color(0xFF667EEA)), 
+                            label: const Text("Змінити", style: TextStyle(color: Color(0xFF667EEA)))
+                          )
+                        ],
                       ),
-                      const SizedBox(height: 24),
+                      const SizedBox(height: 16),
 
                       Container(
                         width: double.infinity,
@@ -126,30 +178,48 @@ class _StatisticsPageState extends State<StatisticsPage> {
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              "Загальні витрати $periodLabel",
+                              "Загальні витрати",
                               style: TextStyle(color: Colors.grey[600], fontSize: 14),
                             ),
-                            const SizedBox(height: 30),
+                            const SizedBox(height: 40),
 
                             SizedBox(
-                              height: 200,
-                              child: BarChart(
-                                BarChartData(
-                                  gridData: FlGridData(show: false),
+                              height: 220,
+                              child: chartSpots.isEmpty 
+                              ? Center(
+                                  child: Text(
+                                    "Немає даних за цей період", 
+                                    style: TextStyle(color: Colors.grey[400])
+                                  ),
+                                )
+                              : LineChart(
+                                LineChartData(
+                                  gridData: FlGridData(
+                                    show: true, 
+                                    drawVerticalLine: false,
+                                    horizontalInterval: adjustedMaxY / 4 > 0 ? adjustedMaxY / 4 : 25,
+                                    getDrawingHorizontalLine: (value) => FlLine(
+                                      color: Colors.grey.withOpacity(0.2),
+                                      strokeWidth: 1,
+                                    )
+                                  ),
                                   titlesData: FlTitlesData(
-                                    leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                                    topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                                    rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                                    leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                                    topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                                    rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
                                     bottomTitles: AxisTitles(
                                       sideTitles: SideTitles(
                                         showTitles: true,
+                                        reservedSize: 22,
+                                        interval: (endOfDay.difference(startOfDay).inDays / 5).ceilToDouble().clamp(1.0, 30.0),
                                         getTitlesWidget: (value, meta) {
-                                          // Проста логіка підписів (можна покращити)
+                                          int idx = value.toInt();
+                                          final date = startOfDay.add(Duration(days: idx));
                                           return Padding(
                                             padding: const EdgeInsets.only(top: 8.0),
                                             child: Text(
-                                              (value.toInt() + 1).toString(),
-                                              style: TextStyle(color: Colors.grey[400], fontSize: 10),
+                                              DateFormat('dd.MM').format(date),
+                                              style: TextStyle(color: Colors.grey[500], fontSize: 10, fontWeight: FontWeight.bold),
                                             ),
                                           );
                                         },
@@ -157,43 +227,87 @@ class _StatisticsPageState extends State<StatisticsPage> {
                                     ),
                                   ),
                                   borderData: FlBorderData(show: false),
-                                  barGroups: _generateChartData(filteredLists), // Генеруємо стовпчики
+                                  lineBarsData: [
+                                    LineChartBarData(
+                                      spots: chartSpots,
+                                      isCurved: true,
+                                      color: const Color(0xFF667EEA),
+                                      barWidth: 3,
+                                      isStrokeCapRound: true,
+                                      dotData: FlDotData(
+                                        show: true,
+                                        getDotPainter: (spot, percent, barData, index) => FlDotCirclePainter(
+                                          radius: 3,
+                                          color: Colors.white,
+                                          strokeWidth: 2,
+                                          strokeColor: const Color(0xFF667EEA),
+                                        ),
+                                      ),
+                                      belowBarData: BarAreaData(
+                                        show: true,
+                                        gradient: LinearGradient(
+                                          colors: [
+                                            const Color(0xFF667EEA).withOpacity(0.3),
+                                            const Color(0xFF764BA2).withOpacity(0.0),
+                                          ],
+                                          begin: Alignment.topCenter,
+                                          end: Alignment.bottomCenter,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                  minY: 0,
+                                  maxY: adjustedMaxY,
+                                  lineTouchData: LineTouchData(
+                                    touchTooltipData: LineTouchTooltipData(
+                                      getTooltipColor: (_) => Colors.blueGrey.withOpacity(0.8),
+                                      getTooltipItems: (touchedSpots) {
+                                        return touchedSpots.map((spot) {
+                                          final date = startOfDay.add(Duration(days: spot.x.toInt()));
+                                          return LineTooltipItem(
+                                            '${DateFormat('dd.MM.yy').format(date)}\n',
+                                            const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12),
+                                            children: [
+                                              TextSpan(
+                                                text: '${spot.y.toStringAsFixed(0)} ₴',
+                                                style: const TextStyle(color: Colors.greenAccent, fontWeight: FontWeight.bold, fontSize: 14),
+                                              ),
+                                            ],
+                                          );
+                                        }).toList();
+                                      },
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
-                            const SizedBox(height: 10),
-                            Center(child: Text("Графік активності (к-сть списків)", style: TextStyle(color: Colors.grey[400], fontSize: 12))),
                           ],
                         ),
                       ),
-
+                      
                       const SizedBox(height: 20),
-
-                      Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.all(24),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(20),
-                          boxShadow: [
-                            BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 4)),
-                          ],
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "${filteredLists.length} списків",
-                              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                      
+                      Row(
+                        children: [
+                          Expanded(
+                            child: _buildInfoCard(
+                              title: "Створено списків",
+                              value: "${filteredLists.length}",
+                              icon: Icons.list_alt,
+                              color: Colors.orangeAccent
                             ),
-                            const SizedBox(height: 8),
-                            Text(
-                              "Створено або оновлено $periodLabel",
-                              style: TextStyle(color: Colors.grey[600], fontSize: 14),
+                          ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: _buildInfoCard(
+                              title: "Куплено товарів",
+                              value: "${filteredLists.fold(0, (sum, l) => sum + l.items.where((i) => i.isPurchased).length)}",
+                              icon: Icons.check_circle_outline,
+                              color: Colors.greenAccent
                             ),
-                          ],
-                        ),
-                      ),
+                          ),
+                        ],
+                      )
                     ],
                   ),
                 ),
@@ -205,59 +319,33 @@ class _StatisticsPageState extends State<StatisticsPage> {
     );
   }
 
-  Widget _buildTabButton(String title, String value) {
-    bool isSelected = _selectedPeriod == value;
-    return Expanded(
-      child: GestureDetector(
-        onTap: () => setState(() => _selectedPeriod = value),
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          padding: const EdgeInsets.symmetric(vertical: 10),
-          decoration: BoxDecoration(
-            color: isSelected ? const Color(0xFF667EEA) : Colors.transparent,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          alignment: Alignment.center,
-          child: Text(
-            title,
-            style: TextStyle(
-              color: isSelected ? Colors.white : Colors.grey[600],
-              fontWeight: FontWeight.w600,
+  Widget _buildInfoCard({required String title, required String value, required IconData icon, required Color color}) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 8, offset: const Offset(0, 4)),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: color.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(8),
             ),
+            child: Icon(icon, color: color, size: 24),
           ),
-        ),
+          const SizedBox(height: 12),
+          Text(value, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 4),
+          Text(title, style: TextStyle(color: Colors.grey[600], fontSize: 12)),
+        ],
       ),
     );
-  }
-
-  List<BarChartGroupData> _generateChartData(List<ShoppingListModel> lists) {
-    Map<int, double> dataMap = {};
-
-    for (var list in lists) {
-      int key = 0;
-      if (_selectedPeriod == 'week' || _selectedPeriod == 'month') {
-        key = list.updatedAt.day;
-      } else {
-        key = list.updatedAt.month;
-      }
-      dataMap[key] = (dataMap[key] ?? 0) + 1;
-    }
-
-    return List.generate(dataMap.length > 7 ? 7 : dataMap.length, (index) {
-      final key = dataMap.keys.elementAt(index);
-      final value = dataMap[key]!;
-
-      return BarChartGroupData(
-        x: index,
-        barRods: [
-          BarChartRodData(
-            toY: value,
-            color: const Color(0xFF667EEA).withOpacity(0.5),
-            width: 16,
-            borderRadius: BorderRadius.circular(4),
-          ),
-        ],
-      );
-    });
   }
 }
