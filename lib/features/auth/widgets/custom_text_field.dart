@@ -25,10 +25,12 @@ class CustomTextField extends StatelessWidget {
         children: [
           Text(
             label,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w600,
-              color: Color(0xFF333333),
+              color: Theme.of(context).brightness == Brightness.dark 
+                  ? Colors.white 
+                  : const Color(0xFF333333),
             ),
           ),
           const SizedBox(height: 8),
@@ -37,9 +39,15 @@ class CustomTextField extends StatelessWidget {
             obscureText: obscureText,
             decoration: InputDecoration(
               hintText: hintText,
-              hintStyle: TextStyle(color: Colors.grey[400]),
+              hintStyle: TextStyle(
+                color: Theme.of(context).brightness == Brightness.dark 
+                    ? Colors.grey[400] 
+                    : Colors.grey[600],
+              ),
               filled: true,
-              fillColor: const Color(0xFFF5F5F5),
+              fillColor: Theme.of(context).brightness == Brightness.dark 
+                  ? Colors.grey[850] 
+                  : const Color(0xFFF5F5F5),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
                 borderSide: errorText != null
