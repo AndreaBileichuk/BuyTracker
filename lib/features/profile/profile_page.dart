@@ -4,6 +4,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:buy_tracker/l10n/app_localizations.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -12,6 +13,7 @@ class ProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final authProvider = context.watch<AppAuthProvider>();
     final user = authProvider.currentUser;
+    final l10n = AppLocalizations.of(context)!;
 
     if (user == null) {
       return const Scaffold(
@@ -27,33 +29,33 @@ class ProfilePage extends StatelessWidget {
           children: [
             _buildHeader(context, user),
 
-            _buildSectionTitle(context, "Інформація"),
+            _buildSectionTitle(context, l10n.profileInfo),
             _buildInfoCard(
               context,
               children: [
-                _buildInfoRow(context, "Ім'я", user.displayName ?? 'User'),
+                _buildInfoRow(context, l10n.profileName, user.displayName ?? 'User'),
                 const Divider(height: 1, indent: 16, endIndent: 16),
                 _buildInfoRow(context, "Email", user.email ?? ''),
                 const Divider(height: 1, indent: 16, endIndent: 16),
                 _buildInfoRow(
                   context,
-                  "Дата реєстрації",
+                  l10n.profileRegDate,
                   user.metadata.creationTime != null
                       ? "${user.metadata.creationTime!.day}.${user.metadata.creationTime!.month}.${user.metadata.creationTime!.year}"
-                      : 'Невідома',
+                      : l10n.profileUnknownDate,
                 ),
               ],
             ),
 
             const SizedBox(height: 16),
 
-            _buildSectionTitle(context, "Дії"),
+            _buildSectionTitle(context, l10n.profileActions),
             _buildInfoCard(
               context,
               children: [
-                _buildActionRow(context, Icons.notifications_none, "Нагадування", () => context.go('/reminders')),
+                _buildActionRow(context, Icons.notifications_none, l10n.profileReminders, () => context.go('/reminders')),
                 const Divider(height: 1, indent: 16, endIndent: 16),
-                _buildActionRow(context, Icons.settings_outlined, "Налаштування", () => context.push('/settings')),
+                _buildActionRow(context, Icons.settings_outlined, l10n.profileSettings, () => context.push('/settings')),
               ],
             ),
 
@@ -182,6 +184,7 @@ class ProfilePage extends StatelessWidget {
   }
 
   Widget _buildLogoutButton(BuildContext context, VoidCallback onLogout) {
+    final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: ElevatedButton(
@@ -194,9 +197,9 @@ class ProfilePage extends StatelessWidget {
           elevation: 0,
         ),
         onPressed: onLogout,
-        child: const Text(
-          "Вийти",
-          style: TextStyle(
+        child: Text(
+          l10n.profileLogout,
+          style: const TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
             color: Colors.white,

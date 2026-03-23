@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../../../core/models/ShoppingListItem.dart';
 import '../../../core/providers/ShoppingListsProvider.dart';
+import 'package:buy_tracker/l10n/app_localizations.dart';
 
 class CreateListPage extends StatefulWidget {
   const CreateListPage({super.key});
@@ -60,9 +61,10 @@ class _CreateListPageState extends State<CreateListPage> {
   }
 
   Future<void> _saveList() async {
+    final l10n = AppLocalizations.of(context)!;
     if (_titleController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Введіть назву списку')),
+        SnackBar(content: Text(l10n.enterListNameWarning)),
       );
       return;
     }
@@ -86,7 +88,7 @@ class _CreateListPageState extends State<CreateListPage> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Помилка створення: $e')),
+          SnackBar(content: Text('${l10n.creationError}$e')),
         );
         setState(() {
           _isCreating = false;
@@ -97,6 +99,7 @@ class _CreateListPageState extends State<CreateListPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
@@ -129,9 +132,9 @@ class _CreateListPageState extends State<CreateListPage> {
                     child: const Text("📋", style: TextStyle(fontSize: 24)),
                   ),
                   const SizedBox(width: 16),
-                  const Text(
-                    "Створити список",
-                    style: TextStyle(
+                  Text(
+                    l10n.createList,
+                    style: const TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
@@ -147,12 +150,12 @@ class _CreateListPageState extends State<CreateListPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // ===== Назва списку =====
-                  const Text("Назва списку", style: TextStyle(fontWeight: FontWeight.bold)),
+                  Text(l10n.listName, style: const TextStyle(fontWeight: FontWeight.bold)),
                   const SizedBox(height: 8),
                   TextField(
                     controller: _titleController,
                     decoration: InputDecoration(
-                      hintText: "Наприклад: Продукти на тиждень",
+                      hintText: l10n.listNameHintExample,
                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                     ),
@@ -161,7 +164,7 @@ class _CreateListPageState extends State<CreateListPage> {
                   const SizedBox(height: 20),
 
                   // ===== Вибір іконки =====
-                  const Text("Виберіть іконку", style: TextStyle(fontWeight: FontWeight.bold)),
+                  Text(l10n.chooseIcon, style: const TextStyle(fontWeight: FontWeight.bold)),
                   const SizedBox(height: 12),
                   SizedBox(
                     height: 60,
@@ -193,13 +196,13 @@ class _CreateListPageState extends State<CreateListPage> {
                   const SizedBox(height: 20),
 
                   // ===== Нотатки =====
-                  const Text("Нотатки (необов'язково)", style: TextStyle(fontWeight: FontWeight.bold)),
+                  Text(l10n.notesOptional, style: const TextStyle(fontWeight: FontWeight.bold)),
                   const SizedBox(height: 8),
                   TextField(
                     controller: _noteController,
                     maxLines: 3,
                     decoration: InputDecoration(
-                      hintText: "Додайте нотатки до списку...",
+                      hintText: l10n.notesHint,
                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                       contentPadding: const EdgeInsets.all(16),
                     ),
@@ -209,9 +212,9 @@ class _CreateListPageState extends State<CreateListPage> {
 
                   // ===== Секція Товари =====
                   Row(
-                    children: const [
-                      Text("📝 ", style: TextStyle(fontSize: 18)),
-                      Text("Товари", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                    children: [
+                      const Text("📝 ", style: TextStyle(fontSize: 18)),
+                      Text(l10n.items, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
                     ],
                   ),
                   const SizedBox(height: 16),
@@ -228,7 +231,7 @@ class _CreateListPageState extends State<CreateListPage> {
                         TextField(
                           controller: _itemNameController,
                           decoration: InputDecoration(
-                            hintText: "Назва товару",
+                            hintText: l10n.itemNameHint,
                             fillColor: Colors.white,
                             filled: true,
                             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
@@ -242,7 +245,7 @@ class _CreateListPageState extends State<CreateListPage> {
                                 controller: _itemQtyController,
                                 keyboardType: TextInputType.number,
                                 decoration: InputDecoration(
-                                  hintText: "Кількість",
+                                  hintText: l10n.quantityHint,
                                   fillColor: Colors.white,
                                   filled: true,
                                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
@@ -289,7 +292,7 @@ class _CreateListPageState extends State<CreateListPage> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(item.name, style: const TextStyle(fontWeight: FontWeight.bold)),
-                                    Text("${item.quantity} шт.", style: TextStyle(color: Colors.grey[600], fontSize: 12)),
+                                    Text("${item.quantity} ${l10n.pcs}.", style: TextStyle(color: Colors.grey[600], fontSize: 12)),
                                   ],
                                 ),
                               ),
@@ -336,9 +339,9 @@ class _CreateListPageState extends State<CreateListPage> {
                       ),
                       child: _isCreating
                           ? const CircularProgressIndicator(color: Colors.white)
-                          : const Text(
-                        "Створити список",
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                          : Text(
+                        l10n.createList,
+                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
                       ),
                     ),
                   ),

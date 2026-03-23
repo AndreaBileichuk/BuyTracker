@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../../core/providers/ShoppingListsProvider.dart';
 import '../../../core/providers/AuthProvider.dart';
 import '../widgets/shopping_list_item_card.dart';
+import 'package:buy_tracker/l10n/app_localizations.dart';
 
 class ListsPage extends StatefulWidget {
   const ListsPage({super.key});
@@ -25,6 +26,7 @@ class _ListsPageState extends State<ListsPage> {
       key: ValueKey(authProvider.currentUser?.uid),
 
       builder: (context, provider, child) {
+        final l10n = AppLocalizations.of(context)!;
         return Stack(
           children: [
             Column(
@@ -59,19 +61,19 @@ class _ListsPageState extends State<ListsPage> {
                           const SizedBox(width: 16),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            children: const [
+                            children: [
                               Text(
-                                "Всі списки",
-                                style: TextStyle(
+                                l10n.allLists,
+                                style: const TextStyle(
                                   fontSize: 28,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white,
                                 ),
                               ),
-                              SizedBox(height: 4),
+                              const SizedBox(height: 4),
                               Text(
-                                "Ваші списки покупок",
-                                style: TextStyle(fontSize: 18, color: Colors.white70),
+                                l10n.yourShoppingLists,
+                                style: const TextStyle(fontSize: 18, color: Colors.white70),
                               ),
                             ],
                           ),
@@ -88,9 +90,9 @@ class _ListsPageState extends State<ListsPage> {
                           children: [
                             const Icon(Icons.search, color: Colors.white70, size: 24),
                             const SizedBox(width: 12),
-                            const Text(
-                              "Шукати список...",
-                              style: TextStyle(fontSize: 18, color: Colors.white70),
+                            Text(
+                              l10n.searchList,
+                              style: const TextStyle(fontSize: 18, color: Colors.white70),
                             ),
                           ],
                         ),
@@ -105,9 +107,9 @@ class _ListsPageState extends State<ListsPage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
-                        "Списки",
-                        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                      Text(
+                        l10n.lists,
+                        style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                       ),
                     ],
                   ),
@@ -127,7 +129,7 @@ class _ListsPageState extends State<ListsPage> {
                           Icon(Icons.error_outline, size: 60, color: Colors.red[300]),
                           const SizedBox(height: 16),
                           Text(
-                            "Ой, щось пішло не так!",
+                            l10n.oopsSomethingWentWrong,
                             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Theme.of(context).textTheme.bodyLarge?.color),
                           ),
                           const SizedBox(height: 8),
@@ -145,7 +147,7 @@ class _ListsPageState extends State<ListsPage> {
                                 // Якщо у провайдера є метод refresh або fetchLists
                                 // provider.fetchLists();
                               },
-                              child: const Text("Спробувати ще раз")
+                              child: Text(l10n.tryAgain)
                           )
                         ],
                       ),
@@ -155,7 +157,7 @@ class _ListsPageState extends State<ListsPage> {
                     Expanded(
                       child: Center(
                         child: Text(
-                          "Списки не знайдено.\nСтворіть свій перший список!",
+                          l10n.noListsFoundCreateFirst,
                           textAlign: TextAlign.center,
                           style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.6), fontSize: 16),
                         ),

@@ -1,6 +1,7 @@
 import 'package:buy_tracker/core/models/ShoppingListModel.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:buy_tracker/l10n/app_localizations.dart';
 
 class ShoppingListItemCard extends StatelessWidget {
   final ShoppingListModel list;
@@ -9,6 +10,7 @@ class ShoppingListItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
@@ -52,7 +54,7 @@ class ShoppingListItemCard extends StatelessWidget {
                           Text(
                             list.description.isNotEmpty
                                 ? list.description
-                                : "Оновлено ${list.updatedAt.hour}:${list.updatedAt.minute.toString().padLeft(2, '0')}",
+                                : "${l10n.updatedAt}${list.updatedAt.hour}:${list.updatedAt.minute.toString().padLeft(2, '0')}",
                             style: TextStyle(
                               fontSize: 14,
                               color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.6),
@@ -84,7 +86,7 @@ class ShoppingListItemCard extends StatelessWidget {
                     ),
                     const SizedBox(width: 6),
                     Text(
-                      "${list.purchasedItems} з ${list.totalItems} товарів",
+                      l10n.itemsOfTotal(list.purchasedItems.toString(), list.totalItems.toString()),
                       style: TextStyle(
                         fontSize: 14,
                         color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.7),
@@ -98,7 +100,7 @@ class ShoppingListItemCard extends StatelessWidget {
                     ),
                     const SizedBox(width: 4),
                     Text(
-                      "${list.totalBudget.toStringAsFixed(2)} грн",
+                      "${list.totalBudget.toStringAsFixed(2)} ${l10n.currencyLabel}",
                       style: TextStyle(
                         fontSize: 14,
                         color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.7),

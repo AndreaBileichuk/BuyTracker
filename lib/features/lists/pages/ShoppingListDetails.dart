@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../../../core/models/ShoppingListItem.dart';
 import '../../../core/models/ShoppingListModel.dart';
 import '../../../core/providers/ShoppingListsProvider.dart';
+import 'package:buy_tracker/l10n/app_localizations.dart';
 
 class ShoppingListDetailsPage extends StatefulWidget {
   final String listId;
@@ -44,6 +45,7 @@ class _ShoppingListDetailsPageState extends State<ShoppingListDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Consumer<ShoppingListsProvider>(
@@ -130,7 +132,7 @@ class _ShoppingListDetailsPageState extends State<ShoppingListDetailsPage> {
                               ),
                               const SizedBox(height: 4),
                               Text(
-                                "Створено: ${list.createdAt.day}.${list.createdAt.month}.${list.createdAt.year}",
+                                "${l10n.createdAt}${list.createdAt.day}.${list.createdAt.month}.${list.createdAt.year}",
                                 style: TextStyle(
                                   color: Colors.white.withOpacity(0.8),
                                   fontSize: 12,
@@ -158,9 +160,9 @@ class _ShoppingListDetailsPageState extends State<ShoppingListDetailsPage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        _buildStatCard("$purchasedItems/$totalItems", "Куплено"),
-                        _buildStatCard("${totalPrice.toStringAsFixed(0)}₴", "Витрачено"),
-                        _buildStatCard("${(progress * 100).toInt()}%", "Прогрес"),
+                        _buildStatCard("$purchasedItems/$totalItems", l10n.purchased),
+                        _buildStatCard("${totalPrice.toStringAsFixed(0)}₴", l10n.spent),
+                        _buildStatCard("${(progress * 100).toInt()}%", l10n.progress),
                       ],
                     ),
                   ],
@@ -173,11 +175,11 @@ class _ShoppingListDetailsPageState extends State<ShoppingListDetailsPage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    _buildActionButton(Icons.add, "Додати", () => _showAddItemModal(context, provider, list!.id)),
-                    _buildActionButton(Icons.person_add_alt_1, "Поділитися", () {
+                    _buildActionButton(Icons.add, l10n.add, () => _showAddItemModal(context, provider, list!.id)),
+                    _buildActionButton(Icons.person_add_alt_1, l10n.share, () {
                       context.go('/lists/${list!.id}/share');
                     }),
-                    _buildActionButton(Icons.notifications_active, "Нагадати", () {
+                    _buildActionButton(Icons.notifications_active, l10n.remindBtn, () {
                       context.push('/reminders/create?listId=${list!.id}');
                     }),
                   ],
@@ -187,7 +189,7 @@ class _ShoppingListDetailsPageState extends State<ShoppingListDetailsPage> {
               // ===== List Items =====
               Expanded(
                 child: list.items.isEmpty
-                    ? const Center(child: Text("Список порожній. Додайте щось!"))
+                    ? Center(child: Text(l10n.listEmptyAddSomething))
                     : ListView.builder(
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     itemCount: list.items.length,
@@ -233,7 +235,7 @@ class _ShoppingListDetailsPageState extends State<ShoppingListDetailsPage> {
                               // Якщо куплено і є ціна, показуємо її
                               if (item.isPurchased && item.price != null && item.price! > 0)
                                 Text(
-                                  "Ціна: ${item.price!.toStringAsFixed(2)} ₴",
+                                  "${l10n.priceLabel}${item.price!.toStringAsFixed(2)} ₴",
                                   style: TextStyle(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.bold, fontSize: 12),
                                 )
                             ],
@@ -268,6 +270,7 @@ class _ShoppingListDetailsPageState extends State<ShoppingListDetailsPage> {
   // ===== НОВЕ ВІКНО ВВОДУ ЦІНИ =====
   void _showPriceDialog(BuildContext context, ShoppingListsProvider provider, String listId, ShoppingListItem item) {
     _priceInputController.clear();
+    final l10n = AppLocalizations.of(context)!;
 
     showDialog(
       context: context,
@@ -275,7 +278,7 @@ class _ShoppingListDetailsPageState extends State<ShoppingListDetailsPage> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: Center(
           child: Text(
-            "Скільки коштував\n${item.name}?",
+            "${l10n.howMuchDidItCost}${item.name}?",
             textAlign: TextAlign.center,
             style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
           ),
@@ -295,9 +298,9 @@ class _ShoppingListDetailsPageState extends State<ShoppingListDetailsPage> {
                 keyboardType: const TextInputType.numberWithOptions(decimal: true),
                 autofocus: true,
                 style: const TextStyle(fontSize: 18),
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   border: InputBorder.none,
-                  hintText: "Введіть суму",
+                  hintText: l10n.enterAmount,
                   suffixText: "₴",
                 ),
               ),
@@ -322,12 +325,12 @@ class _ShoppingListDetailsPageState extends State<ShoppingListDetailsPage> {
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               ),
-              child: const Text("Підтвердити", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
+              child: Text(l10n.confirm, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
             ),
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text("Скасувати", style: TextStyle(color: Colors.grey)),
+            child: Text(l10n.cancel, style: const TextStyle(color: Colors.grey)),
           ),
         ],
       ),
@@ -338,11 +341,11 @@ class _ShoppingListDetailsPageState extends State<ShoppingListDetailsPage> {
   // Щоб не дублювати код, я їх не вставляв, але вони повинні бути тут.
 
   void _showAddItemModal(BuildContext context, ShoppingListsProvider provider, String listId) {
-    // ... твій код модалки додавання ...
     _nameController.clear();
     _qtyController.clear();
-    String selectedUnit = 'шт';
-    final List<String> units = ['шт', 'кг', 'г', 'л', 'мл', 'уп', 'бан'];
+    final l10n = AppLocalizations.of(context)!;
+    String selectedUnit = l10n.unitPcs;
+    final List<String> units = [l10n.unitPcs, l10n.unitKg, l10n.unitG, l10n.unitL, l10n.unitMl, l10n.unitPack, l10n.unitCan];
 
     showDialog(
       context: context,
@@ -361,13 +364,13 @@ class _ShoppingListDetailsPageState extends State<ShoppingListDetailsPage> {
                       child: const Icon(Icons.close, size: 20, color: Colors.grey),
                     ),
                   ),
-                  const Text("Додати товар", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                  Text(l10n.addItemTitle, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
                   const SizedBox(height: 16),
                   TextField(
                     controller: _nameController,
                     textCapitalization: TextCapitalization.sentences,
                     decoration: InputDecoration(
-                      hintText: "Назва товару",
+                      hintText: l10n.itemNameHint,
                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                     ),
                   ),
@@ -380,7 +383,7 @@ class _ShoppingListDetailsPageState extends State<ShoppingListDetailsPage> {
                           controller: _qtyController,
                           keyboardType: const TextInputType.numberWithOptions(decimal: true),
                           decoration: InputDecoration(
-                            hintText: "К-сть",
+                            hintText: l10n.qtyShort,
                             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                           ),
                         ),
@@ -428,7 +431,7 @@ class _ShoppingListDetailsPageState extends State<ShoppingListDetailsPage> {
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                       ),
-                      child: const Text("Додати", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                      child: Text(l10n.add, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                     ),
                   ),
                 ],
@@ -444,7 +447,8 @@ class _ShoppingListDetailsPageState extends State<ShoppingListDetailsPage> {
     _nameController.text = item.name;
     _qtyController.text = item.quantity.toString();
     String selectedUnit = item.unit;
-    final List<String> units = ['шт', 'кг', 'г', 'л', 'мл', 'уп', 'бан'];
+    final l10n = AppLocalizations.of(context)!;
+    final List<String> units = [l10n.unitPcs, l10n.unitKg, l10n.unitG, l10n.unitL, l10n.unitMl, l10n.unitPack, l10n.unitCan];
 
     if (!units.contains(selectedUnit)) units.add(selectedUnit);
 
@@ -465,13 +469,13 @@ class _ShoppingListDetailsPageState extends State<ShoppingListDetailsPage> {
                       child: const Icon(Icons.close, size: 20, color: Colors.grey),
                     ),
                   ),
-                  const Text("Редагувати товар", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                  Text(l10n.editItemTitle, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
                   const SizedBox(height: 16),
                   TextField(
                     controller: _nameController,
                     textCapitalization: TextCapitalization.sentences,
                     decoration: InputDecoration(
-                      hintText: "Назва товару",
+                      hintText: l10n.itemNameHint,
                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                     ),
                   ),
@@ -484,7 +488,7 @@ class _ShoppingListDetailsPageState extends State<ShoppingListDetailsPage> {
                           controller: _qtyController,
                           keyboardType: const TextInputType.numberWithOptions(decimal: true),
                           decoration: InputDecoration(
-                            hintText: "К-сть",
+                            hintText: l10n.qtyShort,
                             border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                           ),
                         ),
@@ -533,7 +537,7 @@ class _ShoppingListDetailsPageState extends State<ShoppingListDetailsPage> {
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                       ),
-                      child: const Text("Зберегти", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                      child: Text(l10n.save, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                     ),
                   ),
                 ],
@@ -546,6 +550,7 @@ class _ShoppingListDetailsPageState extends State<ShoppingListDetailsPage> {
 
   void _showListOptions(BuildContext context, ShoppingListsProvider provider, String listId) {
     // ... твій код опцій списку ...
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (ctx) => Dialog(
@@ -560,13 +565,13 @@ class _ShoppingListDetailsPageState extends State<ShoppingListDetailsPage> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              _buildMenuOption("Видалити", () {
+              _buildMenuOption(l10n.delete, () {
                 provider.deleteList(listId);
                 Navigator.pop(ctx);
                 context.pop();
               }),
               Container(height: 1, color: Colors.white.withOpacity(0.3)),
-              _buildMenuOption("Редагувати", () {
+              _buildMenuOption(l10n.edit, () {
                 Navigator.pop(ctx);
                 context.push('/lists/$listId/edit');
               }),

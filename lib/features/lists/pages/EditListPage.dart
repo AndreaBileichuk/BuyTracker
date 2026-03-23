@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../../../core/providers/ShoppingListsProvider.dart';
+import 'package:buy_tracker/l10n/app_localizations.dart';
 
 class EditListPage extends StatefulWidget {
   final String listId;
@@ -50,8 +51,9 @@ class _EditListPageState extends State<EditListPage> {
     } else {
       // Якщо список не знайдено (видалений)
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Список не знайдено')),
+          SnackBar(content: Text(l10n.listNotFound)),
         );
         context.pop();
       }
@@ -66,9 +68,10 @@ class _EditListPageState extends State<EditListPage> {
   }
 
   Future<void> _saveChanges() async {
+    final l10n = AppLocalizations.of(context)!;
     if (_titleController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Введіть назву списку')),
+        SnackBar(content: Text(l10n.enterListNameWarning)),
       );
       return;
     }
@@ -88,6 +91,7 @@ class _EditListPageState extends State<EditListPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: Colors.white,
       body: _isLoading
@@ -122,9 +126,9 @@ class _EditListPageState extends State<EditListPage> {
                     child: const Icon(Icons.edit, color: Colors.white, size: 24),
                   ),
                   const SizedBox(width: 16),
-                  const Text(
-                    "Редагувати список",
-                    style: TextStyle(
+                  Text(
+                    l10n.editListTitle,
+                    style: const TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
@@ -140,12 +144,12 @@ class _EditListPageState extends State<EditListPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // ===== Назва списку =====
-                  const Text("Назва списку", style: TextStyle(fontWeight: FontWeight.bold)),
+                  Text(l10n.listName, style: const TextStyle(fontWeight: FontWeight.bold)),
                   const SizedBox(height: 8),
                   TextField(
                     controller: _titleController,
                     decoration: InputDecoration(
-                      hintText: "Наприклад: Продукти на тиждень",
+                      hintText: l10n.listNameHintExample,
                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                     ),
@@ -154,7 +158,7 @@ class _EditListPageState extends State<EditListPage> {
                   const SizedBox(height: 20),
 
                   // ===== Вибір іконки =====
-                  const Text("Виберіть іконку", style: TextStyle(fontWeight: FontWeight.bold)),
+                  Text(l10n.chooseIcon, style: const TextStyle(fontWeight: FontWeight.bold)),
                   const SizedBox(height: 12),
                   SizedBox(
                     height: 60,
@@ -186,13 +190,13 @@ class _EditListPageState extends State<EditListPage> {
                   const SizedBox(height: 20),
 
                   // ===== Нотатки =====
-                  const Text("Нотатки (необов'язково)", style: TextStyle(fontWeight: FontWeight.bold)),
+                  Text(l10n.notesOptional, style: const TextStyle(fontWeight: FontWeight.bold)),
                   const SizedBox(height: 8),
                   TextField(
                     controller: _noteController,
                     maxLines: 3,
                     decoration: InputDecoration(
-                      hintText: "Додайте нотатки до списку...",
+                      hintText: l10n.notesHint,
                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                       contentPadding: const EdgeInsets.all(16),
                     ),
@@ -224,9 +228,9 @@ class _EditListPageState extends State<EditListPage> {
                         shadowColor: Colors.transparent,
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                       ),
-                      child: const Text(
-                        "Зберегти зміни",
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                      child: Text(
+                        l10n.saveChanges,
+                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
                       ),
                     ),
                   ),
@@ -239,7 +243,7 @@ class _EditListPageState extends State<EditListPage> {
                         // Тут можна додати діалог підтвердження і виклик provider.deleteList
                       },
                       icon: const Icon(Icons.delete, color: Colors.red),
-                      label: const Text("Видалити список", style: TextStyle(color: Colors.red)),
+                      label: Text(l10n.deleteListBtn, style: const TextStyle(color: Colors.red)),
                     ),
                   ),
                   const SizedBox(height: 20),

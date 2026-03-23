@@ -13,6 +13,9 @@ import 'features/reminders/providers/RemindersProvider.dart';
 import 'core/services/NotificationService.dart';
 import 'core/theme/AppTheme.dart';
 import 'core/providers/ThemeProvider.dart';
+import 'core/providers/LocaleProvider.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:buy_tracker/l10n/app_localizations.dart';
 
 late FirebaseAnalytics analytics;
 
@@ -49,6 +52,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => LocaleProvider()),
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider(create: (_) => AppAuthProvider()),
         ChangeNotifierProxyProvider<AppAuthProvider, ShoppingListsProvider>(
@@ -59,13 +63,24 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(create: (_) => RemindersProvider()),
       ],
-      child: Consumer2<AppAuthProvider, ThemeProvider>(
-        builder: (context, authProvider, themeProvider, _) {
+      child: Consumer3<AppAuthProvider, ThemeProvider, LocaleProvider>(
+        builder: (context, authProvider, themeProvider, localeProvider, _) {
           final router = AppRouter(authProvider).router;
 
           return MaterialApp.router(
             title: 'Buy Tracker',
             theme: themeProvider.currentTheme,
+            locale: localeProvider.locale,
+            localizationsDelegates: const [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: const [
+              Locale('uk'),
+              Locale('en'),
+            ],
             routerConfig: router,
           );
         },

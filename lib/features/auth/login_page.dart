@@ -1,4 +1,5 @@
 import 'widgets/custom_text_field.dart';
+import 'package:buy_tracker/l10n/app_localizations.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -21,22 +22,24 @@ class _LoginPageState extends State<LoginPage> {
   String? _generalError;
 
   String? _validateEmail(String email) {
+    final l10n = AppLocalizations.of(context)!;
     if (email.isEmpty) {
-      return 'Email не може бути порожнім';
+      return l10n.emailCannotBeEmpty;
     }
     final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
     if (!emailRegex.hasMatch(email)) {
-      return 'Невірний формат email';
+      return l10n.invalidEmailFormat;
     }
     return null;
   }
 
   String? _validatePassword(String password) {
+    final l10n = AppLocalizations.of(context)!;
     if (password.isEmpty) {
-      return 'Пароль не може бути порожнім';
+      return l10n.passwordCannotBeEmpty;
     }
     if (password.length < 6) {
-      return 'Пароль має містити мінімум 6 символів';
+      return l10n.passwordMinLength;
     }
     return null;
   }
@@ -62,7 +65,7 @@ class _LoginPageState extends State<LoginPage> {
     } on FirebaseAuthException catch (e) {
       setState(() => _generalError = _getErrorMessage(e.code));
     } catch (e) {
-      setState(() => _generalError = "Виникла помилка: $e");
+      setState(() => _generalError = "${AppLocalizations.of(context)!.generalErrorPrefix}$e");
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -70,56 +73,59 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> _handleForgotPassword() async {
     final auth = Provider.of<AppAuthProvider>(context, listen: false);
+    final l10n = AppLocalizations.of(context)!;
 
     if (_emailController.text.isEmpty) {
-      setState(() => _generalError = "Введіть email для відновлення");
+      setState(() => _generalError = l10n.enterEmailToReset);
       return;
     }
 
     try {
       await auth.resetPassword(_emailController.text.trim());
     } catch (e) {
-      setState(() => _generalError = "Не вдалося надіслати лист: $e");
+      setState(() => _generalError = "${l10n.failedToSendResetEmail}$e");
     }
   }
 
 
   String _getErrorMessage(String code) {
+    final l10n = AppLocalizations.of(context)!;
     switch (code) {
       case 'invalid-credential':
-        return 'Пароль або пошта неправильні';
+        return l10n.invalidCredential;
       case 'user-not-found':
-        return 'Користувача з такою адресою не знайдено';
+        return l10n.userNotFound;
       case 'wrong-password':
-        return 'Невірний пароль';
+        return l10n.wrongPassword;
       case 'invalid-email':
-        return 'Невірний формат email';
+        return l10n.invalidEmailFormat;
       case 'user-disabled':
-        return 'Цей обліковий запис вимкнено';
+        return l10n.userDisabled;
       case 'too-many-requests':
-        return 'Забагато спроб. Спробуйте пізніше';
+        return l10n.tooManyRequests;
       case 'network-request-failed':
-        return 'Помилка мережі. Перевірте з\'єднання';
+        return l10n.networkRequestFailed;
       default:
-        return 'Помилка входу: $code';
+        return '${l10n.loginError}$code';
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return SingleChildScrollView(
       child: Center(
         child: Column(
           children: [
             CustomTextField(
-              label: "Email",
-              hintText: "your@email.com",
+              label: l10n.email,
+              hintText: l10n.emailHint,
               controller: _emailController,
               errorText: _emailError,
             ),
             CustomTextField(
-              label: "Пароль",
-              hintText: "••••••••",
+              label: l10n.password,
+              hintText: l10n.passwordHint,
               controller: _passwordController,
               obscureText: true,
               errorText: _passwordError,
@@ -152,7 +158,7 @@ class _LoginPageState extends State<LoginPage> {
               child: TextButton(
                 onPressed: _handleForgotPassword,
                 child: Text(
-                  "Забули пароль?",
+                  l10n.forgotPassword,
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.primary,
                     fontSize: 14,
@@ -163,7 +169,7 @@ class _LoginPageState extends State<LoginPage> {
             _isLoading
                 ? CircularProgressIndicator()
                 : CustomButton(
-              text: "Увійти",
+              text: l10n.signIn,
               clickHandler: _handleLogin,
             ),
           ],

@@ -4,6 +4,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:buy_tracker/l10n/app_localizations.dart';
 import '../../core/providers/ShoppingListsProvider.dart';
 
 class HomePage extends StatelessWidget {
@@ -15,6 +16,7 @@ class HomePage extends StatelessWidget {
 
     final shoppingLists = context.watch<ShoppingListsProvider>().lists.take(3);
     final user = context.watch<AppAuthProvider>().currentUser;
+    final l10n = AppLocalizations.of(context)!;
 
     if (user == null) {
       return const Scaffold(
@@ -44,17 +46,17 @@ class HomePage extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Привіт! 👋",
-                        style: TextStyle(
+                        l10n.helloGlimpse,
+                        style: const TextStyle(
                           fontSize: 28,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
                         ),
                       ),
-                      SizedBox(height: 4),
+                      const SizedBox(height: 4),
                       Text(
                         user.displayName ?? 'User',
-                        style: TextStyle(fontSize: 18, color: Colors.white70),
+                        style: const TextStyle(fontSize: 18, color: Colors.white70),
                       ),
                     ],
                   ),
@@ -80,14 +82,14 @@ class HomePage extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    "Останні списки",
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  Text(
+                    l10n.recentLists,
+                    style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
                   GestureDetector(
                     onTap: () => context.go('/lists'),
                     child: Text(
-                      "Всі →",
+                      "${l10n.viewAll} →",
                       style: TextStyle(
                         fontSize: 16,
                         color: Theme.of(context).colorScheme.primary,
@@ -103,7 +105,7 @@ class HomePage extends StatelessWidget {
               child: shoppingLists.isEmpty
                   ? Center(
                 child: Text(
-                  "Тут будуть ваші списки покупок",
+                  l10n.noListsHere,
                   style: TextStyle(fontSize: 16, color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.6)),
                 ),
               )

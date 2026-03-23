@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:buy_tracker/l10n/app_localizations.dart';
 
 class ShareListPage extends StatelessWidget {
   final String listId;
@@ -10,13 +11,14 @@ class ShareListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final String shareLink = "https://buytracker.app/list/$listId";
-    final String shareMessage = "Приєднуйся до мого списку покупок в BuyTracker! \n$shareLink";
+    final String shareMessage = "${l10n.shareJoinMessage}$shareLink";
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FA),
       appBar: AppBar(
-        title: const Text("Поділитися", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        title: Text(l10n.share, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
@@ -49,10 +51,10 @@ class ShareListPage extends StatelessWidget {
                 bottomRight: Radius.circular(24),
               ),
             ),
-            child: const Text(
-              "Надішліть це посилання, щоб редагувати список разом з друзями.",
+            child: Text(
+              l10n.shareListDescription,
               textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.white70, fontSize: 16),
+              style: const TextStyle(color: Colors.white70, fontSize: 16),
             ),
           ),
 
@@ -63,9 +65,9 @@ class ShareListPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  "Посилання",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87),
+                Text(
+                  l10n.linkTitle,
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87),
                 ),
                 const SizedBox(height: 12),
                 Container(
@@ -94,10 +96,10 @@ class ShareListPage extends StatelessWidget {
                         onPressed: () {
                           Clipboard.setData(ClipboardData(text: shareLink));
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text("Посилання скопійовано!"),
+                            SnackBar(
+                                content: Text(l10n.linkCopiedMsg),
                                 behavior: SnackBarBehavior.floating,
-                                duration: Duration(seconds: 1)
+                                duration: const Duration(seconds: 1)
                             ),
                           );
                         },
@@ -126,9 +128,9 @@ class ShareListPage extends StatelessWidget {
                   elevation: 4,
                 ),
                 icon: const Icon(Icons.ios_share, color: Colors.white),
-                label: const Text(
-                  "Надіслати запрошення",
-                  style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                label: Text(
+                  l10n.sendInviteBtn,
+                  style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               ),
             ),

@@ -26,7 +26,7 @@ class ShoppingListItem {
       shoppingListId: data['shoppingListId'] ?? '',
       name: data['name'] ?? '',
       quantity: (data['quantity'] as num).toDouble(),
-      unit: data['unit'] ?? 'шт',
+      unit: data['unit'] ?? 'pcs',
       price: (data['price'] as num?)?.toDouble(),
       isPurchased: data['isPurchased'] ?? false,
     );

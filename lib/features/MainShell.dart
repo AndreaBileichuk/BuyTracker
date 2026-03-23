@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:buy_tracker/l10n/app_localizations.dart';
 
 class MainShell extends StatelessWidget {
   final Widget child;
@@ -8,6 +9,7 @@ class MainShell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       body: child,
       bottomNavigationBar: BottomNavigationBar(
@@ -18,22 +20,22 @@ class MainShell extends StatelessWidget {
         unselectedItemColor: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.6) ?? Colors.grey[600],
         currentIndex: _calculateSelectedIndex(context),
         onTap: (index) => _onItemTapped(index, context),
-        items: const [
+        items: [
           BottomNavigationBarItem(
-            icon: Text("🏠", style: TextStyle(fontSize: 24)),
-            label: "Головна",
+            icon: const Text("🏠", style: TextStyle(fontSize: 24)),
+            label: l10n.home,
           ),
           BottomNavigationBarItem(
-            icon: Text("📋", style: TextStyle(fontSize: 24)),
-            label: "Списки",
+            icon: const Text("📋", style: TextStyle(fontSize: 24)),
+            label: l10n.lists,
           ),
           BottomNavigationBarItem(
-            icon: Text("📊", style: TextStyle(fontSize: 24)),
-            label: "Статистика",
+            icon: const Text("📊", style: TextStyle(fontSize: 24)),
+            label: l10n.statistics,
           ),
           BottomNavigationBarItem(
-            icon: Text("⏰", style: TextStyle(fontSize: 24)),
-            label: "Нагадування",
+            icon: const Text("⏰", style: TextStyle(fontSize: 24)),
+            label: l10n.reminders,
           ),
         ],
       ),

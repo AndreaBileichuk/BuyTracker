@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import 'package:buy_tracker/l10n/app_localizations.dart';
 import '../../../core/providers/ShoppingListsProvider.dart';
 import '../providers/RemindersProvider.dart';
 
@@ -83,14 +84,14 @@ class _CreateReminderPageState extends State<CreateReminderPage> {
   Future<void> _saveReminder() async {
     if (_selectedTime == null || _selectedListId == null || _messageController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Введіть текст, оберіть час і список')),
+        SnackBar(content: Text(AppLocalizations.of(context)!.enterTextTimeList)),
       );
       return;
     }
 
     if (_selectedTime!.isBefore(DateTime.now())) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Час нагадування має бути в майбутньому')),
+        SnackBar(content: Text(AppLocalizations.of(context)!.timeMustBeFuture)),
       );
       return;
     }
@@ -110,7 +111,7 @@ class _CreateReminderPageState extends State<CreateReminderPage> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Помилка: $e')),
+          SnackBar(content: Text('${AppLocalizations.of(context)!.error}: $e')),
         );
       }
     } finally {
@@ -122,9 +123,10 @@ class _CreateReminderPageState extends State<CreateReminderPage> {
   Widget build(BuildContext context) {
     final listsProvider = context.watch<ShoppingListsProvider>();
 
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Створити нагадування'),
+        title: Text(l10n.createReminder),
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
         elevation: 1,
@@ -135,8 +137,8 @@ class _CreateReminderPageState extends State<CreateReminderPage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             DropdownButtonFormField<String>(
-              decoration: const InputDecoration(
-                labelText: 'Список покупок',
+              decoration: InputDecoration(
+                labelText: l10n.shoppingListLabel,
                 border: OutlineInputBorder(),
               ),
               value: _selectedListId,
@@ -158,9 +160,9 @@ class _CreateReminderPageState extends State<CreateReminderPage> {
             const SizedBox(height: 16),
             TextField(
               controller: _messageController,
-              decoration: const InputDecoration(
-                labelText: 'Текст нагадування',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                labelText: l10n.reminderTextLabel,
+                border: const OutlineInputBorder(),
               ),
               maxLines: 2,
             ),
@@ -169,12 +171,12 @@ class _CreateReminderPageState extends State<CreateReminderPage> {
               contentPadding: EdgeInsets.zero,
               title: Text(
                 _selectedTime != null
-                    ? 'Заплановано на: ${DateFormat('dd.MM.yyyy HH:mm').format(_selectedTime!)}'
-                    : 'Час не вибрано',
+                    ? '${l10n.scheduledFor}${DateFormat('dd.MM.yyyy HH:mm').format(_selectedTime!)}'
+                    : l10n.timeNotSelected,
               ),
               trailing: ElevatedButton(
                 onPressed: _pickDateTime,
-                child: const Text('Вибрати час'),
+                child: Text(l10n.selectTimeBtn),
               ),
             ),
             const Spacer(),
@@ -186,7 +188,7 @@ class _CreateReminderPageState extends State<CreateReminderPage> {
               ),
               child: _isLoading
                   ? const CircularProgressIndicator(color: Colors.white)
-                  : const Text('Зберегти', style: TextStyle(fontSize: 16, color: Colors.white)),
+                  : Text(l10n.save, style: const TextStyle(fontSize: 16, color: Colors.white)),
             ),
           ],
         ),
