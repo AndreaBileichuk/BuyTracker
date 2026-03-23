@@ -1,4 +1,5 @@
 import 'package:buy_tracker/features/common/custom_button.dart';
+import 'package:buy_tracker/l10n/app_localizations.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -41,48 +42,52 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   String? _validateName(String name) {
+    final l10n = AppLocalizations.of(context)!;
     if (name.isEmpty) {
-      return 'Ім\'я не може бути порожнім';
+      return l10n.nameCannotBeEmpty;
     }
     if (name.length < 2) {
-      return 'Ім\'я має містити мінімум 2 символи';
+      return l10n.nameMinLength;
     }
     return null;
   }
 
   String? _validateEmail(String email) {
+    final l10n = AppLocalizations.of(context)!;
     if (email.isEmpty) {
-      return 'Email не може бути порожнім';
+      return l10n.emailCannotBeEmpty;
     }
     final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
     if (!emailRegex.hasMatch(email)) {
-      return 'Невірний формат email';
+      return l10n.invalidEmailFormat;
     }
     return null;
   }
 
   String? _validatePassword(String password) {
+    final l10n = AppLocalizations.of(context)!;
     if (password.isEmpty) {
-      return 'Пароль не може бути порожнім';
+      return l10n.passwordCannotBeEmpty;
     }
     if (password.length < 8) {
-      return 'Пароль має містити мінімум 8 символів';
+      return l10n.passwordMinLength;
     }
     if (!RegExp(r'[A-Za-z]').hasMatch(password)) {
-      return 'Пароль має містити літери';
+      return l10n.passwordMustContainLetters;
     }
     if (!RegExp(r'[0-9]').hasMatch(password)) {
-      return 'Пароль має містити цифри';
+      return l10n.passwordMustContainNumbers;
     }
     return null;
   }
 
   String? _validateConfirmPassword(String password, String confirmPassword) {
+    final l10n = AppLocalizations.of(context)!;
     if (confirmPassword.isEmpty) {
-      return 'Підтвердіть пароль';
+      return l10n.confirmPasswordEmpty;
     }
     if (password != confirmPassword) {
-      return 'Паролі не збігаються';
+      return l10n.passwordsDoNotMatch;
     }
     return null;
   }
@@ -112,7 +117,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
     if (!_agreedToTerms) {
       setState(() {
-        _generalError = 'Ви маєте погодитись з умовами використання';
+        _generalError = AppLocalizations.of(context)!.mustAgreeToTerms;
       });
       return;
     }
@@ -130,7 +135,7 @@ class _RegisterPageState extends State<RegisterPage> {
     } catch (e) {
       if (mounted) {
         setState(() {
-          _generalError = 'Виникла помилка: ${e.toString()}';
+          _generalError = '${AppLocalizations.of(context)!.generalErrorPrefix}${e.toString()}';
         });
       }
     } finally {
@@ -141,50 +146,52 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   String _getErrorMessage(String code) {
+    final l10n = AppLocalizations.of(context)!;
     switch (code) {
       case 'weak-password':
-        return 'Пароль занадто слабкий';
+        return l10n.weakPassword;
       case 'email-already-in-use':
-        return 'Ця електронна адреса вже використовується';
+        return l10n.emailAlreadyInUse;
       case 'invalid-email':
-        return 'Невірний формат email';
+        return l10n.invalidEmailFormat;
       case 'operation-not-allowed':
-        return 'Реєстрацію через Email/Password не активовано';
+        return l10n.operationNotAllowed;
       case 'network-request-failed':
-        return 'Помилка мережі. Перевірте з\'єднання';
+        return l10n.networkRequestFailed;
       default:
-        return 'Помилка реєстрації: $code';
+        return '${l10n.registerError}$code';
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return SingleChildScrollView(
       child: Center(
         child: Column(
           children: [
             CustomTextField(
-              label: "Ім'я",
-              hintText: "Ваше ім'я",
+              label: l10n.nameLabel,
+              hintText: l10n.nameHint,
               controller: _nameController,
               errorText: _nameError,
             ),
             CustomTextField(
-              label: "Email",
-              hintText: "your@email.com",
+              label: l10n.email,
+              hintText: l10n.emailHint,
               controller: _emailController,
               errorText: _emailError,
             ),
             CustomTextField(
-              label: "Пароль",
-              hintText: "Мінімум 8 символів",
+              label: l10n.password,
+              hintText: l10n.passwordMinHint,
               controller: _passwordController,
               obscureText: true,
               errorText: _passwordError,
             ),
             CustomTextField(
-              label: "Підтвердження пароля",
-              hintText: "Повторіть пароль",
+              label: l10n.confirmPassword,
+              hintText: l10n.repeatPasswordHint,
               controller: _confirmPasswordController,
               obscureText: true,
               errorText: _confirmPasswordError,
@@ -234,11 +241,13 @@ class _RegisterPageState extends State<RegisterPage> {
                   Expanded(
                     child: Wrap(
                       children: [
-                        const Text(
-                          "Я погоджуюся з ",
+                        Text(
+                          l10n.iAgreeWith,
                           style: TextStyle(
                             fontSize: 14,
-                            color: Color(0xFF666666),
+                            color: Theme.of(context).brightness == Brightness.dark 
+                                ? Colors.grey[400] 
+                                : const Color(0xFF666666),
                           ),
                         ),
                         GestureDetector(
@@ -246,7 +255,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             print("Open Terms of Use");
                           },
                           child: Text(
-                            "Умовами використання",
+                            l10n.termsOfUse,
                             style: TextStyle(
                               fontSize: 14,
                               color: Theme.of(context).colorScheme.primary,
@@ -254,11 +263,13 @@ class _RegisterPageState extends State<RegisterPage> {
                             ),
                           ),
                         ),
-                        const Text(
-                          " та ",
+                        Text(
+                          l10n.andLabel,
                           style: TextStyle(
                             fontSize: 14,
-                            color: Color(0xFF666666),
+                            color: Theme.of(context).brightness == Brightness.dark 
+                                ? Colors.grey[400] 
+                                : const Color(0xFF666666),
                           ),
                         ),
                         GestureDetector(
@@ -266,7 +277,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             print("Open Privacy Policy");
                           },
                           child: Text(
-                            "Політикою конфіденційності",
+                            l10n.privacyPolicy,
                             style: TextStyle(
                               fontSize: 14,
                               color: Theme.of(context).colorScheme.primary,
@@ -286,7 +297,7 @@ class _RegisterPageState extends State<RegisterPage> {
               child: CircularProgressIndicator(),
             )
                 : CustomButton(
-              text: "Зареєструватись",
+              text: l10n.signUp,
               clickHandler: _handleSignUp,
             ),
             Container(
@@ -295,8 +306,13 @@ class _RegisterPageState extends State<RegisterPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "Вже маєте акаунт?",
-                    style: TextStyle(fontSize: 16, color: Colors.grey[700]),
+                    l10n.alreadyHaveAccount,
+                    style: TextStyle(
+                      fontSize: 16, 
+                      color: Theme.of(context).brightness == Brightness.dark 
+                          ? Colors.grey[400] 
+                          : Colors.grey[700],
+                    ),
                   ),
                   SizedBox(width: 6),
                   GestureDetector(
@@ -304,7 +320,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       widget.functionRedirect();
                     },
                     child: Text(
-                      "Увійти",
+                      l10n.signIn,
                       style: TextStyle(
                         fontSize: 16,
                         color: Theme.of(context).colorScheme.primary,

@@ -1,4 +1,5 @@
 import 'package:buy_tracker/features/auth/register_page.dart';
+import 'package:buy_tracker/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 import 'login_page.dart';
@@ -17,6 +18,7 @@ class _AuthWrapperPageState extends State<AuthWrapperPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       body: SingleChildScrollView(
         child: Center(
@@ -38,14 +40,14 @@ class _AuthWrapperPageState extends State<AuthWrapperPage> {
               Container(
                 margin: EdgeInsets.only(top: 12),
                 child: Text(
-                  "Buy Tracker",
+                  l10n.appTitle,
                   style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
                 ),
               ),
               Container(
                 margin: EdgeInsets.only(top: 8),
                 child: Text(
-                  "Твій помічник у покупках",
+                  l10n.yourShoppingAssistant,
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.normal,
@@ -73,7 +75,7 @@ class _AuthWrapperPageState extends State<AuthWrapperPage> {
                           padding: EdgeInsets.symmetric(vertical: 14),
                         ),
                         child: Text(
-                          "Вхід",
+                          l10n.login,
                           style: TextStyle(
                             color: _isLoginMode
                                 ? Colors.white
@@ -100,7 +102,7 @@ class _AuthWrapperPageState extends State<AuthWrapperPage> {
                           padding: EdgeInsets.symmetric(vertical: 14),
                         ),
                         child: Text(
-                          "Реєстрація",
+                          l10n.register,
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,

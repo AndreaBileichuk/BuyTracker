@@ -2,6 +2,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import 'package:buy_tracker/l10n/app_localizations.dart';
 
 import '../../core/models/ShoppingListModel.dart';
 import '../../core/providers/ShoppingListsProvider.dart';
@@ -76,7 +77,8 @@ class _StatisticsPageState extends State<StatisticsPage> {
             range: range,
           );
           
-          String periodLabel = "з ${DateFormat('dd.MM.yyyy').format(startOfDay)} по ${DateFormat('dd.MM.yyyy').format(endOfDay)}";
+          final l10n = AppLocalizations.of(context)!;
+          String periodLabel = "${l10n.periodFrom}${DateFormat('dd.MM.yyyy').format(startOfDay)}${l10n.periodTo}${DateFormat('dd.MM.yyyy').format(endOfDay)}";
 
           double totalSpent = StatisticsService.calculateTotalSpent(filteredLists);
 
@@ -117,12 +119,12 @@ class _StatisticsPageState extends State<StatisticsPage> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
-                              "Статистика",
-                              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+                            Text(
+                              l10n.statistics,
+                              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
                             ),
                             Text(
-                              "Аналітика витрат",
+                              l10n.costAnalytics,
                               style: TextStyle(fontSize: 14, color: Colors.white.withOpacity(0.8)),
                             ),
                           ],
@@ -157,7 +159,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
                           TextButton.icon(
                             onPressed: _pickDateRange, 
                             icon: Icon(Icons.edit_calendar, size: 18, color: Theme.of(context).colorScheme.primary), 
-                            label: Text("Змінити", style: TextStyle(color: Theme.of(context).colorScheme.primary))
+                            label: Text(l10n.changeBtn, style: TextStyle(color: Theme.of(context).colorScheme.primary))
                           )
                         ],
                       ),
@@ -182,7 +184,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              "Загальні витрати",
+                              l10n.totalExpenses,
                               style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.6), fontSize: 14),
                             ),
                             const SizedBox(height: 40),
@@ -192,7 +194,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
                               child: chartSpots.isEmpty 
                               ? Center(
                                   child: Text(
-                                    "Немає даних за цей період", 
+                                    l10n.noDataForPeriod, 
                                     style: TextStyle(color: Colors.grey[400])
                                   ),
                                 )
@@ -295,7 +297,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
                         children: [
                           Expanded(
                             child: _buildInfoCard(
-                              title: "Створено списків",
+                              title: l10n.listsCreated,
                               value: "${filteredLists.length}",
                               icon: Icons.list_alt,
                               color: Colors.orangeAccent
@@ -304,7 +306,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
                           const SizedBox(width: 16),
                           Expanded(
                             child: _buildInfoCard(
-                              title: "Куплено товарів",
+                              title: l10n.itemsBought,
                               value: "${filteredLists.fold(0, (sum, l) => sum + l.items.where((i) => i.isPurchased).length)}",
                               icon: Icons.check_circle_outline,
                               color: Colors.greenAccent

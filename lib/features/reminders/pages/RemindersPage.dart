@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import 'package:buy_tracker/l10n/app_localizations.dart';
 import '../providers/RemindersProvider.dart';
 
 class RemindersPage extends StatelessWidget {
@@ -9,6 +10,7 @@ class RemindersPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Column(
@@ -24,11 +26,7 @@ class RemindersPage extends StatelessWidget {
             ),
             child: Row(
               children: [
-                IconButton(
-                  icon: const Icon(Icons.arrow_back, color: Colors.white),
-                  onPressed: () => context.pop(),
-                ),
-                const SizedBox(width: 8),
+
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
@@ -38,9 +36,9 @@ class RemindersPage extends StatelessWidget {
                   child: const Text("🔔", style: TextStyle(fontSize: 24)),
                 ),
                 const SizedBox(width: 16),
-                const Text(
-                  "Нагадування",
-                  style: TextStyle(
+                Text(
+                  l10n.reminders,
+                  style: const TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
@@ -57,13 +55,13 @@ class RemindersPage extends StatelessWidget {
           }
 
           if (provider.error != null) {
-            return Center(child: Text('Помилка: ${provider.error}'));
+            return Center(child: Text('${l10n.errorOccurred}${provider.error}'));
           }
 
           if (provider.reminders.isEmpty) {
             return Center(
               child: Text(
-                'У вас немає запланованих нагадувань',
+                l10n.noReminders,
                 style: TextStyle(fontSize: 16, color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.6)),
               ),
             );
